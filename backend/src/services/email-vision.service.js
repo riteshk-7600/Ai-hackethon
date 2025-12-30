@@ -31,7 +31,24 @@ class EmailVisionService {
                 return this.getSeniorConversantRecovery();
             }
 
-            const response = await aiService.analyzeImageWithVision(base64Image, this.getVisionPrompt());
+            // 8-second timeout race to prevent Vercel Hard 500
+            const timeoutPromise = new Promise((_, reject) => {
+                setTimeout(() => reject(new Error('AI Analysis Timed Out (Vercel Limit)')), 8000);
+            });
+
+            const visionPromise = aiService.analyzeImageWithVision(base64Image, this.getVisionPrompt());
+
+            let response;
+            try {
+                response = await Promise.race([visionPromise, timeoutPromise]);
+            } catch (raceError) {
+                // If timed out, fallback to demo to save the user's session
+                logger.warn('AI Timed out, using fallback');
+                if (raceError.message.includes('Timed Out')) {
+                    return this.getSeniorConversantRecovery();
+                }
+                throw raceError;
+            }
 
             if (!response || response.includes('not configured')) {
                 // If strictly no keys are present (likely local dev without env), fallback to demo
