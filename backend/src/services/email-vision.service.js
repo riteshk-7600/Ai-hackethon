@@ -21,7 +21,7 @@ class EmailVisionService {
             const response = await aiService.analyzeImageWithVision(base64Image, this.getVisionPrompt());
 
             if (!response || response.includes('not configured')) {
-                throw new Error('AI Vision service returned invalid response');
+                throw new Error('No AI Provider Configured. Please add GEMINI_API_KEY to Vercel Environment Variables.');
             }
 
             return this.parseResponse(response);
