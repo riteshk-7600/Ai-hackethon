@@ -68,19 +68,19 @@ class EmailController {
                 success: true,
                 html,
                 metrics: {
-                    qualityScore: validation.metrics.overall,
-                    compatibility: this.calculateCompatibilityMatrix(validation, accessibility),
+                    qualityScore: validation?.metrics?.overall || 0,
+                    compatibility: this.calculateCompatibilityMatrix(validation || {}, accessibility || {}),
                     accessibility: {
-                        score: accessibility.score,
-                        issues: accessibility.issues,
-                        level: accessibility.level
+                        score: accessibility?.score || 0,
+                        issues: accessibility?.issues || [],
+                        level: accessibility?.level || 'N/A'
                     },
-                    spamRisk: validation.spamRisk,
-                    fileSize: validation.metrics.fileSize,
+                    spamRisk: validation?.spamRisk || { score: 0, status: 'unknown' },
+                    fileSize: validation?.metrics?.fileSize || '0 KB',
                     validation: {
-                        issues: validation.issues.filter(i => i.severity === 'error'),
-                        warnings: validation.issues.filter(i => i.severity === 'warning'),
-                        scores: validation.metrics
+                        issues: (validation?.issues || []).filter(i => i.severity === 'error'),
+                        warnings: (validation?.issues || []).filter(i => i.severity === 'warning'),
+                        scores: validation?.metrics || {}
                     }
                 }
             });
@@ -106,18 +106,18 @@ class EmailController {
                 success: true,
                 html,
                 metrics: {
-                    qualityScore: validation.metrics.overall,
-                    compatibility: this.calculateCompatibilityMatrix(validation, accessibility),
+                    qualityScore: validation?.metrics?.overall || 0,
+                    compatibility: this.calculateCompatibilityMatrix(validation || {}, accessibility || {}),
                     accessibility: {
-                        score: accessibility.score,
-                        issues: accessibility.issues,
-                        level: accessibility.level
+                        score: accessibility?.score || 0,
+                        issues: accessibility?.issues || [],
+                        level: accessibility?.level || 'N/A'
                     },
-                    spamRisk: validation.spamRisk,
+                    spamRisk: validation?.spamRisk || { score: 0, status: 'unknown' },
                     validation: {
-                        issues: validation.issues.filter(i => i.severity === 'error'),
-                        warnings: validation.issues.filter(i => i.severity === 'warning'),
-                        scores: validation.metrics
+                        issues: (validation?.issues || []).filter(i => i.severity === 'error'),
+                        warnings: (validation?.issues || []).filter(i => i.severity === 'warning'),
+                        scores: validation?.metrics || {}
                     }
                 }
             });
@@ -140,18 +140,18 @@ class EmailController {
             res.json({
                 success: true,
                 metrics: {
-                    qualityScore: validation.metrics.overall,
-                    compatibility: this.calculateCompatibilityMatrix(validation, accessibility),
+                    qualityScore: validation?.metrics?.overall || 0,
+                    compatibility: this.calculateCompatibilityMatrix(validation || {}, accessibility || {}),
                     accessibility: {
-                        score: accessibility.score,
-                        issues: accessibility.issues,
-                        level: accessibility.level
+                        score: accessibility?.score || 0,
+                        issues: accessibility?.issues || [],
+                        level: accessibility?.level || 'N/A'
                     },
-                    spamRisk: validation.spamRisk,
+                    spamRisk: validation?.spamRisk || { score: 0, status: 'unknown' },
                     validation: {
-                        issues: validation.issues.filter(i => i.severity === 'error'),
-                        warnings: validation.issues.filter(i => i.severity === 'warning'),
-                        scores: validation.metrics
+                        issues: (validation?.issues || []).filter(i => i.severity === 'error'),
+                        warnings: (validation?.issues || []).filter(i => i.severity === 'warning'),
+                        scores: validation?.metrics || {}
                     }
                 }
             });
@@ -179,18 +179,18 @@ class EmailController {
                 success: true,
                 html: fixedHtml,
                 metrics: {
-                    qualityScore: validation.metrics.overall,
-                    compatibility: this.calculateCompatibilityMatrix(validation, accessibility),
+                    qualityScore: validation?.metrics?.overall || 0,
+                    compatibility: this.calculateCompatibilityMatrix(validation || {}, accessibility || {}),
                     accessibility: {
-                        score: accessibility.score,
-                        issues: accessibility.issues,
-                        level: accessibility.level
+                        score: accessibility?.score || 0,
+                        issues: accessibility?.issues || [],
+                        level: accessibility?.level || 'N/A'
                     },
-                    spamRisk: validation.spamRisk,
+                    spamRisk: validation?.spamRisk || { score: 0, status: 'unknown' },
                     validation: {
-                        issues: validation.issues.filter(i => i.severity === 'error'),
-                        warnings: validation.issues.filter(i => i.severity === 'warning'),
-                        scores: validation.metrics
+                        issues: (validation?.issues || []).filter(i => i.severity === 'error'),
+                        warnings: (validation?.issues || []).filter(i => i.severity === 'warning'),
+                        scores: validation?.metrics || {}
                     }
                 }
             });
