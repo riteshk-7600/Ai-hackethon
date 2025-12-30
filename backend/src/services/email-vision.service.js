@@ -111,9 +111,9 @@ JSON OUTPUT ONLY:
             document: { width: 600, backgroundColor: '#f4f4f4' },
             layout: {
                 sections: [
-                    { id: 'header', type: 'header', y: 0, height: 80, backgroundColor: '#ffffff' },
-                    { id: 'body', type: 'body', y: 80, height: 400, backgroundColor: '#ffffff', padding: { top: 20, right: 40, bottom: 20, left: 40 } },
-                    { id: 'footer', type: 'footer', y: 480, height: 100, backgroundColor: '#002e26' }
+                    { id: 'header', type: 'header', y: 0, height: 100, backgroundColor: '#ffffff' },
+                    { id: 'body', type: 'body', y: 100, height: 600, backgroundColor: '#ffffff', padding: { top: 30, right: 30, bottom: 30, left: 30 } },
+                    { id: 'footer', type: 'footer', y: 700, height: 150, backgroundColor: '#002e26' }
                 ]
             },
             components: [
@@ -121,75 +121,108 @@ JSON OUTPUT ONLY:
                 {
                     type: 'text',
                     sectionId: 'header',
-                    coords: { x: 200, y: 20, w: 200, h: 40 },
-                    styles: { fontSize: '28px', fontWeight: '800', color: '#111111', textAlign: 'center', fontFamily: 'Arial, sans-serif' },
+                    coords: { x: 0, y: 30, w: 600, h: 40 },
+                    styles: { fontSize: '32px', fontWeight: '800', color: '#111111', textAlign: 'center', fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif' },
                     content: 'conversant'
                 },
                 // Intro Text
                 {
                     type: 'text',
                     sectionId: 'body',
-                    coords: { x: 40, y: 100, w: 520, h: 60 },
-                    styles: { fontSize: '16px', color: '#333333', textAlign: 'left', lineHeight: '24px' },
-                    content: 'Dear Admin,<br/><br/>A new contact form has been submitted:'
+                    coords: { x: 30, y: 20, w: 540, h: 30 },
+                    styles: { fontSize: '18px', fontWeight: '700', color: '#111111', textAlign: 'left', margin: '0 0 10px 0' },
+                    content: 'Dear Admin,'
                 },
-                // Form Table Row 1
                 {
                     type: 'text',
                     sectionId: 'body',
-                    coords: { x: 40, y: 180, w: 150, h: 30 },
-                    styles: { fontSize: '14px', fontWeight: '700', color: '#111111', backgroundColor: '#f9f9f9', padding: '10px' },
+                    coords: { x: 30, y: 55, w: 540, h: 30 },
+                    styles: { fontSize: '16px', color: '#333333', textAlign: 'left', margin: '0 0 25px 0' },
+                    content: 'A new contact form has been submitted:'
+                },
+                // Form Table Rows (strictly side-by-side for generator detection)
+                {
+                    type: 'text',
+                    sectionId: 'body',
+                    coords: { x: 30, y: 120, w: 180, h: 40 },
+                    styles: { fontSize: '14px', fontWeight: '700', color: '#111111', backgroundColor: '#f9f9f9' },
                     content: 'First Name:'
                 },
                 {
                     type: 'text',
                     sectionId: 'body',
-                    coords: { x: 190, y: 180, w: 370, h: 30 },
-                    styles: { fontSize: '14px', color: '#555555', backgroundColor: '#f9f9f9', padding: '10px' },
+                    coords: { x: 210, y: 120, w: 360, h: 40 },
+                    styles: { fontSize: '14px', color: '#333333' },
                     content: '[First Name x]'
                 },
-                // Form Table Row 2
                 {
                     type: 'text',
                     sectionId: 'body',
-                    coords: { x: 40, y: 210, w: 150, h: 30 },
-                    styles: { fontSize: '14px', fontWeight: '700', color: '#111111', padding: '10px' },
+                    coords: { x: 30, y: 160, w: 180, h: 40 },
+                    styles: { fontSize: '14px', fontWeight: '700', color: '#111111', backgroundColor: '#f9f9f9' },
                     content: 'Last Name:'
                 },
                 {
                     type: 'text',
                     sectionId: 'body',
-                    coords: { x: 190, y: 210, w: 370, h: 30 },
-                    styles: { fontSize: '14px', color: '#555555', padding: '10px' },
+                    coords: { x: 210, y: 160, w: 360, h: 40 },
+                    styles: { fontSize: '14px', color: '#333333' },
                     content: '[Last Name x]'
                 },
-                // Form Table Row 3
                 {
                     type: 'text',
                     sectionId: 'body',
-                    coords: { x: 40, y: 240, w: 150, h: 30 },
-                    styles: { fontSize: '14px', fontWeight: '700', color: '#111111', backgroundColor: '#f9f9f9', padding: '10px' },
+                    coords: { x: 30, y: 200, w: 180, h: 40 },
+                    styles: { fontSize: '14px', fontWeight: '700', color: '#111111', backgroundColor: '#f9f9f9' },
                     content: 'Email:'
                 },
                 {
                     type: 'text',
                     sectionId: 'body',
-                    coords: { x: 190, y: 240, w: 370, h: 30 },
-                    styles: { fontSize: '14px', color: '#555555', backgroundColor: '#f9f9f9', padding: '10px' },
+                    coords: { x: 210, y: 200, w: 360, h: 40 },
+                    styles: { fontSize: '14px', color: '#333333' },
                     content: '[Email x]'
+                },
+                {
+                    type: 'text',
+                    sectionId: 'body',
+                    coords: { x: 30, y: 240, w: 180, h: 40 },
+                    styles: { fontSize: '14px', fontWeight: '700', color: '#111111', backgroundColor: '#f9f9f9' },
+                    content: 'Phone:'
+                },
+                {
+                    type: 'text',
+                    sectionId: 'body',
+                    coords: { x: 210, y: 240, w: 360, h: 40 },
+                    styles: { fontSize: '14px', color: '#333333' },
+                    content: '[Phone x]'
+                },
+                {
+                    type: 'text',
+                    sectionId: 'body',
+                    coords: { x: 30, y: 280, w: 180, h: 40 },
+                    styles: { fontSize: '14px', fontWeight: '700', color: '#111111', backgroundColor: '#f9f9f9' },
+                    content: 'Reason for Nominating Guest:'
+                },
+                {
+                    type: 'text',
+                    sectionId: 'body',
+                    coords: { x: 210, y: 280, w: 360, h: 40 },
+                    styles: { fontSize: '14px', color: '#333333' },
+                    content: '[Reason for Nominating Guest x]'
                 },
                 // Footer
                 {
                     type: 'text',
                     sectionId: 'footer',
-                    coords: { x: 0, y: 500, w: 600, h: 40 },
-                    styles: { fontSize: '18px', fontWeight: '700', color: '#ffffff', textAlign: 'center', padding: '20px 0' },
+                    coords: { x: 0, y: 30, w: 600, h: 40 },
+                    styles: { fontSize: '24px', fontWeight: '800', color: '#ffffff', textAlign: 'center' },
                     content: 'conversant'
                 },
                 {
                     type: 'text',
                     sectionId: 'footer',
-                    coords: { x: 0, y: 540, w: 600, h: 20 },
+                    coords: { x: 0, y: 80, w: 600, h: 20 },
                     styles: { fontSize: '11px', color: '#88a39f', textAlign: 'center' },
                     content: '© 2025 Conversant Inc. All rights reserved.'
                 }

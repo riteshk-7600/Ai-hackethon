@@ -137,7 +137,6 @@ export class EmailTableBuilder {
       'background-color': '#f9f9f9',
       'border-bottom': '1px solid #eeeeee',
       'font-weight': 'bold',
-      'width': '160px',
       ...styles.label
     };
     const valueStyles = {
@@ -146,14 +145,16 @@ export class EmailTableBuilder {
       ...styles.value
     };
 
+    const labelWidth = styles.label?.width || '180';
+
     return `
     <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
       <tr>
-        <td align="left" valign="top" width="180" style="${this.stylesToString(labelStyles)}">
-          ${this.createText(label, { 'font-weight': 'bold', 'font-size': '14px' })}
+        <td align="left" valign="top" width="${labelWidth}" style="${this.stylesToString(labelStyles)}">
+          ${this.createText(label, { 'font-weight': 'bold', 'font-size': '14px', 'color': labelStyles.color || '#111111' })}
         </td>
         <td align="left" valign="top" style="${this.stylesToString(valueStyles)}">
-          ${this.createText(value, { 'font-size': '14px' })}
+          ${this.createText(value, { 'font-size': '14px', 'color': valueStyles.color || '#333333' })}
         </td>
       </tr>
     </table>`;
