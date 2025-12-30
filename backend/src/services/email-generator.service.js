@@ -38,10 +38,9 @@ class EmailGeneratorService {
                 outerBg: document.backgroundColor || '#f4f4f4',
                 innerBg: document.innerColor || '#ffffff'
             });
-        } catch (err) {
-            const errorMsg = err.response?.data?.error || err.response?.data?.message || err.message || 'Failed to process design';
-            logger.error('Generator failure', { error: errorMsg });
-            throw err; // Re-throw the original error for upstream handling
+        } catch (error) {
+            logger.error('Generator failure', { error: error.message });
+            throw error;
         }
     }
 
