@@ -26,8 +26,12 @@ class EmailVisionService {
 
             const base64Image = imageBuffer.toString('base64');
 
-            if (!process.env.GEMINI_API_KEY && !process.env.OPENAI_API_KEY && !process.env.ANTHROPIC_API_KEY) {
-                logger.warn('No AI API keys configured. Returning demo template.');
+            const hasGemini = process.env.GEMINI_API_KEY && process.env.GEMINI_API_KEY !== 'test-key';
+            const hasOpenAI = process.env.OPENAI_API_KEY && process.env.OPENAI_API_KEY !== 'test-key';
+            const hasAnthropic = process.env.ANTHROPIC_API_KEY && process.env.ANTHROPIC_API_KEY !== 'test-key';
+
+            if (!hasGemini && !hasOpenAI && !hasAnthropic) {
+                logger.warn('No valid AI API keys configured (or using test-key). Returning demo template.');
                 return this.getSeniorConversantRecovery();
             }
 
