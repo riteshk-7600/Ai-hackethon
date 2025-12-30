@@ -5,14 +5,12 @@ import multer from 'multer'
 import path from 'path'
 import fs from 'fs'
 
-// Configure multer for image uploads
+import os from 'os'
+
+// Configure multer for image uploads using system temp dir (Vercel compatible)
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        const uploadDir = './uploads/temp-optimizer'
-        if (!fs.existsSync(uploadDir)) {
-            fs.mkdirSync(uploadDir, { recursive: true })
-        }
-        cb(null, uploadDir)
+        cb(null, os.tmpdir())
     },
     filename: (req, file, cb) => {
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)

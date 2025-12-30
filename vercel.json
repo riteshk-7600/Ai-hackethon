@@ -1,0 +1,35 @@
+{
+    "version": 2,
+    "name": "frontend-ai-suite",
+    "builds": [
+        {
+            "src": "backend/src/server.js",
+            "use": "@vercel/node"
+        },
+        {
+            "src": "frontend/package.json",
+            "use": "@vercel/static-build",
+            "config": {
+                "distDir": "dist"
+            }
+        }
+    ],
+    "rewrites": [
+        {
+            "source": "/api/(.*)",
+            "destination": "backend/src/server.js"
+        },
+        {
+            "source": "/uploads/(.*)",
+            "destination": "backend/src/server.js"
+        },
+        {
+            "source": "/downloads/(.*)",
+            "destination": "backend/src/server.js"
+        },
+        {
+            "source": "/(.*)",
+            "destination": "frontend/$1"
+        }
+    ]
+}
