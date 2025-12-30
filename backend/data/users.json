@@ -1,0 +1,20 @@
+[
+  {
+    "id": "1766755530976",
+    "name": "Admin User",
+    "email": "admin@example.com",
+    "password": "$2b$10$qjpvBeZqF3vkxGLXT0F6au8zZCY.VgqUbBQtDQ3Aiu0MWojCn7BkC",
+    "role": "user",
+    "verified": false,
+    "createdAt": "2025-12-26T13:25:30.976Z",
+    "sessions": [
+      {
+        "id": "1766755586705",
+        "ip": "::1",
+        "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+        "device": "Web Browser",
+        "lastActive": "2025-12-26T13:26:26.705Z"
+      }
+    ]
+  }
+]
