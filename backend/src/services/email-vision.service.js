@@ -79,37 +79,39 @@ class EmailVisionService {
 
     getVisionPrompt() {
         return `
-        You are a Top-Tier Email Restoration Engine. 
-        Your goal is to extract a PIXEL-PERFECT structural representation of this email design for 100% compliant HTML generation.
+        You are an EMAIL DESIGN RECONSTRUCTION ENGINE.
+        
+        IMPORTANT:
+        You must treat the uploaded image as a VISUAL BLUEPRINT, not inspiration.
+        
+        TASK:
+        1.  **Analyze**: List every visible section, block, row, and visual element.
+        2.  **Translate**: Convert elements into an EMAIL-SAFE TABLE STRUCTURE strategy.
+        3.  **Match**: Extract exact colors, spacing, typography, and hierarchy.
+        
+        CRITICAL RULES:
+        -   **Tables Only**: Plan for a structure using only <table>, <tr>, <td>.
+        -   **Exactness**: Do NOT simplify. Do NOT redesign. Do NOT remove sections.
+        -   **Limitations**: If a specific visual effect (e.g., complex overlapping, blur, specific shadow) cannot be done in email HTML, add it to "confidenceGaps".
 
-        CRITICAL ANALYSIS RULES:
-        1.  **Layout**: Identify exact background colors (outer & inner). Detect sections (Header, Hero, Body, Footer).
-        2.  **Typography**: Extract EXACT font-sizes (px), line-heights, weights (400/700), and colors (#HEX).
-        3.  **Spacing**: Estimate padding (top/bottom/left/right) in pixels for EVERY container.
-        4.  **Components**: 
-            - Classify buttons as "button". Get their exact background-color, text-color, border-radius, and label.
-            - Classify dividers as "divider".
-            - Classify images.
-        5.  **Data Grids**: If you see "Label: Value" pairs in a list, group them as "data-row".
-        6.  **Dark Mode**: Note any specific dark mode inversions needed (if obvious light text on dark bg).
-
-        RETURN ONLY JSON (No markdown, no talk):
+        RETURN JSON ONLY:
         {
             "matchConfidence": 100,
-            "title": "Short Descriptive Title",
+            "title": "Descriptive Title",
+            "confidenceGaps": ["List specific technical limitations or parts that cannot be perfectly replicated here"],
             "document": {
                 "width": 600,
-                "backgroundColor": "#outer-bg",
-                "innerColor": "#inner-content-bg",
-                "fontFamily": "Inter, Helvetica, sans-serif"
+                "backgroundColor": "#HEX",
+                "innerColor": "#HEX",
+                "fontFamily": "Helvetica, Arial, sans-serif"
             },
             "layout": {
                 "sections": [
                     {
                         "id": "s1",
-                        "type": "header|hero|body|footer",
-                        "backgroundColor": "#hex",
-                        "padding": "20px 40px",
+                        "type": "header|body|footer",
+                        "backgroundColor": "#HEX",
+                        "padding": "20px",
                         "y": 0,
                         "height": 100
                     }
@@ -119,17 +121,17 @@ class EmailVisionService {
                 {
                     "type": "text|image|button|divider|data-row",
                     "sectionId": "s1",
-                    "content": "Text content or Image URL or Button Label",
-                    "altText": "Description for accessibility",
+                    "content": "Make sure text content is exact",
                     "coords": { "x": 0, "y": 0, "w": 600, "h": 50 },
                     "styles": {
                         "fontSize": "16px",
-                        "fontWeight": "400|700",
-                        "color": "#hex",
-                        "backgroundColor": "#hex",
+                        "fontWeight": "bold|normal",
+                        "color": "#HEX",
+                        "backgroundColor": "#HEX",
                         "textAlign": "left|center|right",
-                        "borderRadius": "4px",
-                        "padding": "10px 20px"
+                        "padding": "10px",
+                        "border": "none",
+                        "borderRadius": "4px" (buttons only)
                     }
                 }
             ]
