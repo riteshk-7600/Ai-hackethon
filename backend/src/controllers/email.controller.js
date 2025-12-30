@@ -58,17 +58,35 @@ class EmailController {
             logger.info('Running generation pipeline');
 
             // 1. Generate HTML (Will throw if confidence < 98%)
-            const html = await emailGeneratorService.generateEmailHtml(analysis, options);
+            let html;
+            try {
+                html = await emailGeneratorService.generateEmailHtml(analysis, options);
+            } catch (err) {
+                logger.error('HTML Generation failed', { error: err.message });
+                return res.status(500).json({ success: false, error: `Generation Blocked: ${err.message}` });
+            }
 
-            // 2. Validate & Audit
-            const validation = await emailValidatorService.validateEmail(html);
-            const accessibility = await emailAccessibilityService.auditAccessibility(html);
+            // 2. Validate & Audit (Defensive wrap)
+            let validation = { issues: [], metrics: { overall: 0 } };
+            let accessibility = { score: 0, issues: [], level: 'N/A' };
+
+            try {
+                validation = await emailValidatorService.validateEmail(html) || validation;
+            } catch (err) {
+                logger.warn('Validator failed, proceeding with empty results', { error: err.message });
+            }
+
+            try {
+                accessibility = await emailAccessibilityService.auditAccessibility(html) || accessibility;
+            } catch (err) {
+                logger.warn('Accessibility audit failed, proceeding with empty results', { error: err.message });
+            }
 
             res.json({
                 success: true,
                 html,
                 metrics: {
-                    qualityScore: validation?.metrics?.overall || 0,
+                    qualityScore: validation?.metrics?.overall || validation?.qualityScore || 0,
                     compatibility: this.calculateCompatibilityMatrix(validation || {}, accessibility || {}),
                     accessibility: {
                         score: accessibility?.score || 0,
@@ -85,8 +103,8 @@ class EmailController {
                 }
             });
         } catch (error) {
-            logger.error('Generation controller failure', { error: error.message });
-            res.status(500).json({ success: false, error: error.message });
+            logger.error('Critical generation failure', { error: error.message, stack: error.stack });
+            res.status(500).json({ success: false, error: `Critical Engine Error: ${error.message}` });
         }
     }
 

@@ -262,12 +262,25 @@ class EmailAccessibilityService {
     }
 
     getRelativeLuminance(hex) {
-        let r = parseInt(hex.substring(1, 3), 16) / 255;
-        let g = parseInt(hex.substring(3, 5), 16) / 255;
-        let b = parseInt(hex.substring(5, 7), 16) / 255;
+        if (!hex || typeof hex !== 'string' || !hex.startsWith('#')) return 1; // Default to white luminance
 
-        [r, g, b] = [r, g, b].map(v => v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4));
-        return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+        let color = hex.substring(1);
+        if (color.length === 3) {
+            color = color.split('').map(char => char + char).join('');
+        }
+
+        if (color.length !== 6) return 1;
+
+        try {
+            let r = parseInt(color.substring(0, 2), 16) / 255;
+            let g = parseInt(color.substring(2, 4), 16) / 255;
+            let b = parseInt(color.substring(4, 6), 16) / 255;
+
+            [r, g, b] = [r, g, b].map(v => v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4));
+            return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+        } catch (e) {
+            return 1;
+        }
     }
 
     calculateScore(issues) {
