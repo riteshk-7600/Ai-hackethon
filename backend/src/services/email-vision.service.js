@@ -21,6 +21,10 @@ class EmailVisionService {
             const response = await aiService.analyzeImageWithVision(base64Image, this.getVisionPrompt());
 
             if (!response || response.includes('not configured')) {
+                // If strictly no keys are present (likely local dev without env), fallback to demo
+                if (!process.env.GEMINI_API_KEY && !process.env.OPENAI_API_KEY) {
+                    return this.getSeniorConversantRecovery();
+                }
                 throw new Error('No AI Provider Configured. Please add GEMINI_API_KEY to Vercel Environment Variables.');
             }
 
