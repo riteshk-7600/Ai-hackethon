@@ -110,11 +110,11 @@ export class EmailTableBuilder {
 
     columnData.forEach((colContent) => {
       html += `
-      <!--[if (gte mso 9)|(IE)]><td valign="top" width="${widthPerColumn}%"><![endif]-->
+      <!--[if (gte mso 9)|(IE)]><td valign="top" width="${widthPerColumn}%" style="padding: 0;"><![endif]-->
       <div class="stack-column" style="display: inline-block; width: 100%; max-width: ${widthPerColumn}%; vertical-align: top;">
         <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
           <tr>
-            <td style="padding: 10px;">
+            <td style="padding: 5px 10px;">
               ${colContent}
             </td>
           </tr>
@@ -126,6 +126,37 @@ export class EmailTableBuilder {
     html += `<!--[if (gte mso 9)|(IE)]></tr></table><![endif]-->`;
 
     return this.wrapInTable(html, containerStyles);
+  }
+
+  /**
+   * Create a strict non-stacking data row (ideal for forms/specs)
+   */
+  static createDataRow(label, value, styles = {}) {
+    const labelStyles = {
+      'padding': '12px 15px',
+      'background-color': '#f9f9f9',
+      'border-bottom': '1px solid #eeeeee',
+      'font-weight': 'bold',
+      'width': '160px',
+      ...styles.label
+    };
+    const valueStyles = {
+      'padding': '12px 15px',
+      'border-bottom': '1px solid #eeeeee',
+      ...styles.value
+    };
+
+    return `
+    <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr>
+        <td align="left" valign="top" width="180" style="${this.stylesToString(labelStyles)}">
+          ${this.createText(label, { 'font-weight': 'bold', 'font-size': '14px' })}
+        </td>
+        <td align="left" valign="top" style="${this.stylesToString(valueStyles)}">
+          ${this.createText(value, { 'font-size': '14px' })}
+        </td>
+      </tr>
+    </table>`;
   }
 
   /**
