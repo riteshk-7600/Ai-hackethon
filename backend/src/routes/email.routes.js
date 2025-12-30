@@ -12,12 +12,14 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+import os from 'os';
+
 const router = express.Router();
 
-// Configure multer for image uploads
+// Configure multer for image uploads using system temp dir (Vercel compatible)
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, path.join(__dirname, '../../uploads'));
+        cb(null, os.tmpdir());
     },
     filename: (req, file, cb) => {
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
