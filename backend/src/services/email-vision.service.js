@@ -7,10 +7,23 @@ import aiService from './ai.service.js';
 import { logger } from '../utils/logger.js';
 import fs from 'fs/promises';
 
+import sharp from 'sharp';
+
 class EmailVisionService {
     async analyzeDesign(imagePath) {
         try {
-            const imageBuffer = await fs.readFile(imagePath);
+            let imageBuffer = await fs.readFile(imagePath);
+
+            // Optimization: Resize to prevent timeout/payload issues
+            try {
+                imageBuffer = await sharp(imageBuffer)
+                    .resize(800, null, { withoutEnlargement: true })
+                    .jpeg({ quality: 80 })
+                    .toBuffer();
+            } catch (optError) {
+                logger.warn('Image optimization failed, proceeding with original', { error: optError.message });
+            }
+
             const base64Image = imageBuffer.toString('base64');
 
             if (!process.env.GEMINI_API_KEY && !process.env.OPENAI_API_KEY && !process.env.ANTHROPIC_API_KEY) {
