@@ -12,12 +12,26 @@ class EmailVisionService {
         try {
             const imageBuffer = await fs.readFile(imagePath);
             const base64Image = imageBuffer.toString('base64');
+
+            if (!process.env.GEMINI_API_KEY && !process.env.OPENAI_API_KEY && !process.env.ANTHROPIC_API_KEY) {
+                logger.warn('No AI API keys configured. Returning demo template.');
+                return this.getSeniorConversantRecovery();
+            }
+
             const response = await aiService.analyzeImageWithVision(base64Image, this.getVisionPrompt());
 
-            if (response.includes('not configured')) return this.getSeniorConversantRecovery();
+            if (!response || response.includes('not configured')) {
+                throw new Error('AI Vision service returned invalid response');
+            }
+
             return this.parseResponse(response);
         } catch (error) {
-            return this.getSeniorConversantRecovery();
+            logger.error('Vision Analysis Failed', { error: error.message });
+            // Only fall back if it is a specific known error, otherwise bubble up so user knows their key is wrong
+            if (error.message.includes('API key')) {
+                throw new Error('AI Configuration Error: Invalid or missing API Key.');
+            }
+            throw new Error(`Design Analysis Failed: ${error.message}`);
         }
     }
 
