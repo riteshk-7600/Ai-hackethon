@@ -6,9 +6,17 @@ dotenv.config()
 
 class AINamingService {
     constructor() {
-        this.openai = new OpenAI({
-            apiKey: process.env.OPENAI_API_KEY
-        })
+        constructor() {
+            if (process.env.OPENAI_API_KEY && process.env.OPENAI_API_KEY !== 'test-key') {
+                try {
+                    this.openai = new OpenAI({
+                        apiKey: process.env.OPENAI_API_KEY
+                    })
+                } catch (e) {
+                    logger.warn('Failed to initialize OpenAI client', e);
+                }
+            }
+        }
     }
 
     /**
