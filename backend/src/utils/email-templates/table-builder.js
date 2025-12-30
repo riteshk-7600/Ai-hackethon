@@ -80,26 +80,36 @@ export class EmailTableBuilder {
       labelBg = '#f9f9f9',
       borderColor = '#dddddd',
       labelWidth = '180',
-      padding = '14px 20px'
+      padding = '14px 20px',
+      isFirstRow = false
     } = options;
 
-    const labelStyles = {
-      'padding': padding,
-      'background-color': labelBg,
-      'border-bottom': `1px solid ${borderColor}`,
-      'border-right': `1px solid ${borderColor}`,
+    const commonStyles = {
       'font-family': 'Helvetica, Arial, sans-serif',
       'font-size': '14px',
+      'border-bottom': `1px solid ${borderColor}`,
+      'border-left': `1px solid ${borderColor}`,
+      'border-right': `1px solid ${borderColor}`,
+      'mso-line-height-rule': 'exactly'
+    };
+
+    if (isFirstRow) {
+      commonStyles['border-top'] = `1px solid ${borderColor}`;
+    }
+
+    const labelStyles = {
+      ...commonStyles,
+      'padding': padding,
+      'background-color': labelBg,
       'font-weight': 'bold',
       'color': '#111111'
     };
 
     const valueStyles = {
+      ...commonStyles,
       'padding': padding,
       'background-color': '#ffffff',
-      'border-bottom': `1px solid ${borderColor}`,
-      'font-family': 'Helvetica, Arial, sans-serif',
-      'font-size': '14px',
+      'border-left': 'none', // Prevent double border between label and value
       'color': '#444444'
     };
 

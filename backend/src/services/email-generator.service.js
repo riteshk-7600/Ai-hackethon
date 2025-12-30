@@ -72,7 +72,14 @@ class EmailGeneratorService {
         if (currentRow.length > 0) rows.push(currentRow.sort((a, b) => (a.coords.x || 0) - (b.coords.x || 0)));
 
         // Render HTML for rows
-        const rowContent = rows.map(row => {
+        let inDataGrid = false;
+        const rowContent = rows.map((row, index) => {
+            const isDataRow = row.length === 2 && (row[0].content.includes(':') || row[0].styles?.fontWeight === '700');
+
+            // Determine if this is the start of a new grid block
+            const isFirstRowOfGrid = isDataRow && !inDataGrid;
+            inDataGrid = isDataRow;
+
             if (row.length === 1) {
                 const comp = row[0];
                 if (comp.type === 'image') {
@@ -90,14 +97,15 @@ class EmailGeneratorService {
                         </td>
                     </tr>
                 </table>`;
-            } else if (row.length === 2 && (row[0].content.includes(':') || row[0].styles?.fontWeight === '700')) {
+            } else if (isDataRow) {
                 // FORM DATA ROW
                 return `<table border="0" cellpadding="0" cellspacing="0" width="100%">
                     <tr>
                         <td style="padding: 0 40px;">
                             ${EmailTableBuilder.createDataRow(row[0].content, row[1].content, {
                     labelBg: row[0].styles?.backgroundColor || '#f9f9f9',
-                    labelWidth: row[0].coords.w || '180'
+                    labelWidth: row[0].coords.w || '180',
+                    isFirstRow: isFirstRowOfGrid
                 })}
                         </td>
                     </tr>
