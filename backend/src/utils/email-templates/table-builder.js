@@ -135,87 +135,50 @@ export class EmailTableBuilder {
       'font-size': '16px',
       'line-height': '1.6',
       'color': '#333333',
+      'margin': '0', // IMPT: Prevent Outlook default p margins
+      'padding': '0',
       'mso-line-height-rule': 'exactly'
     };
     const combinedStyles = { ...defaultStyles, ...styles };
+    // Use div for block-level text control inside td
     return `<div style="${this.stylesToString(combinedStyles)}">${content}</div>`;
   }
 
   /**
-   * Polish heading rendering (8y polish)
+   * Create a Bulletproof Button (Table-Based for Outlook + Web)
    */
-  static createHeading(content, level = 1, styles = {}) {
-    const sizes = { 1: '32px', 2: '24px', 3: '20px' };
-    const defaultStyles = {
-      'font-family': "Helvetica, Arial, sans-serif",
-      'font-size': sizes[level] || '24px',
-      'font-weight': 'bold',
-      'line-height': '1.3',
-      'color': '#111111',
-      'margin': '0',
-      'mso-line-height-rule': 'exactly'
-    };
-    const combinedStyles = { ...defaultStyles, ...styles };
-    return `<div style="${this.stylesToString(combinedStyles)}">${content}</div>`;
-  }
+  static createButton(label, href = '#', styles = {}) {
+    const {
+      backgroundColor = '#000000',
+      color = '#ffffff',
+      borderRadius = '4px',
+      width = 'auto',
+      align = 'center',
+      padding = '12px 24px',
+      fontSize = '16px',
+      fontWeight = 'bold'
+    } = styles;
 
-  /**
-   * Create multi-column layouts using floating tables for Outlook stacking
-   */
-  static createColumns(columnData, options = {}) {
-    const { padding = '10px' } = options;
-    const columnCount = columnData.length;
-    const widthPerColumn = Math.floor(100 / columnCount);
-
-    let html = `<!--[if (gte mso 9)|(IE)]><table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><![endif]-->`;
-
-    columnData.forEach((colContent) => {
-      html += `
-      <!--[if (gte mso 9)|(IE)]><td valign="top" width="${widthPerColumn}%" style="padding: 0;"><![endif]-->
-      <div class="stack-column" style="display: inline-block; width: 100%; max-width: ${widthPerColumn}%; vertical-align: top;">
-        <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
-          <tr>
-            <td style="padding: ${padding};">
-              ${colContent}
-            </td>
-          </tr>
-        </table>
-      </div>
-      <!--[if (gte mso 9)|(IE)]></td><![endif]-->`;
-    });
-
-    html += `<!--[if (gte mso 9)|(IE)]></tr></table><![endif]-->`;
-
-    return html;
-  }
-
-  /**
-   * Generic 100% table wrapper
-   */
-  static wrapInTable(content, styles = {}) {
-    return `<table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="${this.stylesToString(styles)}">
+    return `<table role="presentation" border="0" cellpadding="0" cellspacing="0" width="${width === 'auto' ? 'auto' : '100%'}" style="margin: 0 auto;">
       <tr>
-        <td align="center">
-          ${content}
+        <td align="${align}" bgcolor="${backgroundColor}" style="border-radius: ${borderRadius}; background-color: ${backgroundColor};">
+          <a href="${href}" target="_blank" style="font-family: Helvetica, Arial, sans-serif; font-size: ${fontSize}; font-weight: ${fontWeight}; color: ${color}; text-decoration: none; padding: ${padding}; border: 1px solid ${backgroundColor}; display: inline-block; border-radius: ${borderRadius}; background-color: ${backgroundColor};">
+            <!--[if mso]>&nbsp;&nbsp;&nbsp;&nbsp;<![endif]--> ${label} <!--[if mso]>&nbsp;&nbsp;&nbsp;&nbsp;<![endif]-->
+          </a>
         </td>
       </tr>
     </table>`;
   }
 
-  static createImage(src, alt, options = {}) {
-    const { width = '200', height = 'auto', align = 'center' } = options;
-    const styleString = this.stylesToString({
-      'display': 'block',
-      'width': `${width}px`,
-      'height': height === 'auto' ? 'auto' : `${height}px`,
-      'outline': 'none',
-      'border': '0'
-    });
-
+  static createDivider(color = '#eeeeee', height = '1px', margin = '20px 0') {
     return `<table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
       <tr>
-        <td align="${align}" style="padding: 20px 0;">
-          <img src="${src}" alt="${this.escapeHtml(alt)}" width="${width}" height="${height}" style="${styleString}" />
+        <td style="padding: ${margin};">
+          <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
+            <tr>
+              <td height="1" style="background-color: ${color}; font-size: 1px; line-height: 1px;">&nbsp;</td>
+            </tr>
+          </table>
         </td>
       </tr>
     </table>`;
