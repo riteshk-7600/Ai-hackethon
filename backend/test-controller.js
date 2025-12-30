@@ -1,5 +1,6 @@
 
-import app from './src/server.js';
+
+// import app from './src/server.js'; // REMOVED to avoid starting the server
 import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
