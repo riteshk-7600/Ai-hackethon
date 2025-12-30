@@ -79,30 +79,45 @@ class EmailGeneratorService {
         // Render HTML for rows
         let inDataGrid = false;
         const rowContent = rows.map((row, index) => {
-            const isDataRow = row.length === 2 && (row[0].content.includes(':') || row[0].styles?.fontWeight === '700');
+            const isDataRow = row.length === 2 && (row[0].type === 'data-row' || (row[0].content.includes(':') && row[1].content));
+
+            // Explicit data-row type handling from new prompt
+            if (row[0].type === 'data-row') {
+                // The new prompt might return a component with type 'data-row'. 
+                // But wait, my prompt structure returns individual components.
+                // Actually, the prompt says "Group them as data-row". 
+                // If the AI returns a single component of type 'data-row', we should handle it.
+                // But the loop above groups by Y. 
+                // Let's assume standard components for now.
+            }
+
+            const isImplicitDataRow = row.length === 2 && (row[0].content.includes(':') || row[0].styles?.fontWeight === '700');
 
             // Determine if this is the start of a new grid block
-            const isFirstRowOfGrid = isDataRow && !inDataGrid;
-            inDataGrid = isDataRow;
+            const isGridRow = isImplicitDataRow && !inDataGrid;
+            inDataGrid = isImplicitDataRow;
 
             if (row.length === 1) {
                 const comp = row[0];
-                if (comp.type === 'image') {
-                    return EmailTableBuilder.createImage(comp.content, comp.altText || '', {
-                        width: comp.coords.w || '200',
-                        align: comp.styles?.textAlign || 'center'
-                    });
-                }
                 const align = comp.styles?.textAlign || (section.type === 'footer' ? 'center' : 'left');
-                const padding = section.type === 'footer' ? '10px 40px' : '15px 40px';
+                // Use explicit padding from component if available, else default
+                const padding = comp.styles?.padding || (section.type === 'footer' ? '10px 40px' : '15px 40px');
+
+                // Allow component to render its own table wrapper if needed (like image)
+                const rendered = this.renderComponent(comp);
+
+                // If the component returns a full table (like image/spacer), return it directly
+                // Otherwise wrap in row structure
+                if (rendered.startsWith('<table')) return rendered;
+
                 return `<table border="0" cellpadding="0" cellspacing="0" width="100%">
                     <tr>
                         <td align="${align}" style="padding: ${padding};">
-                            ${this.renderComponent(comp)}
+                            ${rendered}
                         </td>
                     </tr>
                 </table>`;
-            } else if (isDataRow) {
+            } else if (isImplicitDataRow) {
                 // FORM DATA ROW
                 return `<table border="0" cellpadding="0" cellspacing="0" width="100%">
                     <tr>
@@ -110,7 +125,7 @@ class EmailGeneratorService {
                             ${EmailTableBuilder.createDataRow(row[0].content, row[1].content, {
                     labelBg: row[0].styles?.backgroundColor || (index % 4 === 0 ? '#f9f9f9' : '#ffffff'),
                     labelWidth: (row[0].coords && row[0].coords.w) ? row[0].coords.w : '180',
-                    isFirstRow: isFirstRowOfGrid
+                    isFirstRow: isGridRow
                 })}
                         </td>
                     </tr>
@@ -124,7 +139,7 @@ class EmailGeneratorService {
 
         const sectionStyles = {
             'background-color': section.backgroundColor || 'transparent',
-            'padding': section.id === 'f' ? '40px 0' : '20px 0'
+            'padding': section.padding || (section.id === 'f' ? '40px 0' : '20px 0')
         };
 
         return `<table border="0" cellpadding="0" cellspacing="0" width="100%" style="${EmailTableBuilder.stylesToString(sectionStyles)}">
@@ -138,16 +153,34 @@ class EmailGeneratorService {
 
     renderComponent(comp) {
         const styles = this.normalizeStyles(comp.styles || {});
-        if (comp.type === 'text') {
-            const fontSize = styles['font-size'] ? parseInt(styles['font-size']) : 16;
-            const fontWeight = styles['font-weight'] || 'normal';
 
-            if (fontSize >= 20 || fontWeight === 'bold' || fontWeight >= 700) {
-                return EmailTableBuilder.createHeading(comp.content, 2, styles);
-            }
-            return EmailTableBuilder.createText(comp.content, styles);
+        switch (comp.type) {
+            case 'text':
+                const fontSize = styles['font-size'] ? parseInt(styles['font-size']) : 16;
+                const fontWeight = styles['font-weight'] || 'normal';
+
+                if (fontSize >= 20 || fontWeight === 'bold' || fontWeight >= 700) {
+                    return EmailTableBuilder.createHeading(comp.content, 2, styles);
+                }
+                return EmailTableBuilder.createText(comp.content, styles);
+
+            case 'button':
+                return EmailTableBuilder.createButton(comp.content, '#', styles);
+
+            case 'image':
+                return EmailTableBuilder.createImage(comp.content, comp.altText || '', {
+                    width: comp.coords.w || '200',
+                    align: styles['text-align'] || 'center'
+                });
+
+            case 'divider':
+                return EmailTableBuilder.createDivider(styles.color || '#eeeeee', '1px', styles.padding || '20px 0');
+
+            default:
+                // Fallback for unknown types (treat as text if content exists)
+                if (comp.content) return EmailTableBuilder.createText(comp.content, styles);
+                return `<!-- Unknown component type: ${comp.type} -->`;
         }
-        return `<!-- ${comp.type} component -->`;
     }
 
     async generateBasicTemplate(options = {}) {
