@@ -78,8 +78,62 @@ class EmailVisionService {
     }
 
     getVisionPrompt() {
-        return `Analyze this email design for PIXEL-PERFECT recovery in <table>-based HTML.
-    Return JSON only: { "matchConfidence": 100, "document": { "backgroundColor": "#HEX" }, "layout": { "sections": [] }, "components": [] }`;
+        return `
+        You are a Top-Tier Email Restoration Engine. 
+        Your goal is to extract a PIXEL-PERFECT structural representation of this email design for 100% compliant HTML generation.
+
+        CRITICAL ANALYSIS RULES:
+        1.  **Layout**: Identify exact background colors (outer & inner). Detect sections (Header, Hero, Body, Footer).
+        2.  **Typography**: Extract EXACT font-sizes (px), line-heights, weights (400/700), and colors (#HEX).
+        3.  **Spacing**: Estimate padding (top/bottom/left/right) in pixels for EVERY container.
+        4.  **Components**: 
+            - Classify buttons as "button". Get their exact background-color, text-color, border-radius, and label.
+            - Classify dividers as "divider".
+            - Classify images.
+        5.  **Data Grids**: If you see "Label: Value" pairs in a list, group them as "data-row".
+        6.  **Dark Mode**: Note any specific dark mode inversions needed (if obvious light text on dark bg).
+
+        RETURN ONLY JSON (No markdown, no talk):
+        {
+            "matchConfidence": 100,
+            "title": "Short Descriptive Title",
+            "document": {
+                "width": 600,
+                "backgroundColor": "#outer-bg",
+                "innerColor": "#inner-content-bg",
+                "fontFamily": "Inter, Helvetica, sans-serif"
+            },
+            "layout": {
+                "sections": [
+                    {
+                        "id": "s1",
+                        "type": "header|hero|body|footer",
+                        "backgroundColor": "#hex",
+                        "padding": "20px 40px",
+                        "y": 0,
+                        "height": 100
+                    }
+                ]
+            },
+            "components": [
+                {
+                    "type": "text|image|button|divider|data-row",
+                    "sectionId": "s1",
+                    "content": "Text content or Image URL or Button Label",
+                    "altText": "Description for accessibility",
+                    "coords": { "x": 0, "y": 0, "w": 600, "h": 50 },
+                    "styles": {
+                        "fontSize": "16px",
+                        "fontWeight": "400|700",
+                        "color": "#hex",
+                        "backgroundColor": "#hex",
+                        "textAlign": "left|center|right",
+                        "borderRadius": "4px",
+                        "padding": "10px 20px"
+                    }
+                }
+            ]
+        }`;
     }
 
     parseResponse(res) {
