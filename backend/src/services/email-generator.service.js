@@ -104,8 +104,18 @@ class EmailGeneratorService {
                 return EmailTableBuilder.createRow(this.renderComponent(row[0]), {}, {
                     padding: this.calculateComponentPadding(row[0], section)
                 });
+            } else if (row.length === 2) {
+                // Production Grid: Use DataRow for side-by-side label/value
+                return EmailTableBuilder.createDataRow(
+                    row[0].content,
+                    row[1].content,
+                    {
+                        label: this.normalizeStyles(row[0].styles),
+                        value: this.normalizeStyles(row[1].styles)
+                    }
+                );
             } else {
-                // Multi-column row
+                // Multi-column row (3+)
                 const columnContents = row.map(comp => this.renderComponent(comp));
                 return EmailTableBuilder.createColumns(columnContents, {
                     padding: '0 10px'
