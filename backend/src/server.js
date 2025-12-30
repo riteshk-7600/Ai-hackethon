@@ -113,10 +113,12 @@ app.use((err, req, res, next) => {
     res.status(statusCode).json(errorResponse)
 })
 
-// Start server
-app.listen(PORT, () => {
-    logger.info(`🚀 Server running on port ${PORT}`)
-    logger.info(`📊 Environment: ${process.env.NODE_ENV}`)
-})
+// Start server if not running in a serverless environment (Vercel)
+if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
+    app.listen(PORT, () => {
+        logger.info(`🚀 Server running on port ${PORT}`)
+        logger.info(`📊 Environment: ${process.env.NODE_ENV}`)
+    })
+}
 
 export default app
