@@ -72,7 +72,8 @@ export default function EmailTemplateGenerator() {
             setActiveTab('editor');
             setSuccess('Production HTML generated and audited.');
         } catch (err) {
-            setError(err.response?.data?.error || 'Failed to process design');
+            const errorMsg = err.response?.data?.error || err.response?.data?.message || err.message || 'Failed to process design';
+            setError(errorMsg);
         } finally {
             setLoading(false);
         }

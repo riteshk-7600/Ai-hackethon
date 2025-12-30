@@ -38,13 +38,19 @@ class EmailGeneratorService {
                 outerBg: document.backgroundColor || '#f4f4f4',
                 innerBg: document.innerColor || '#ffffff'
             });
-        } catch (error) {
-            logger.error('Generator failure', { error: error.message });
-            throw error;
+        } catch (err) {
+            const errorMsg = err.response?.data?.error || err.response?.data?.message || err.message || 'Failed to process design';
+            logger.error('Generator failure', { error: errorMsg });
+            throw err; // Re-throw the original error for upstream handling
         }
     }
 
     processSection(section, allComponents) {
+        if (!section || !allComponents) {
+            logger.warn('processSection called with invalid section or components', { section, allComponents });
+            return null;
+        }
+
         const components = allComponents.filter(c => {
             if (c.sectionId) return c.sectionId === section.id;
             return (c.coords && c.coords.y >= section.y && c.coords.y < section.y + section.height);
@@ -103,8 +109,8 @@ class EmailGeneratorService {
                     <tr>
                         <td style="padding: 0 40px;">
                             ${EmailTableBuilder.createDataRow(row[0].content, row[1].content, {
-                    labelBg: row[0].styles?.backgroundColor || '#f9f9f9',
-                    labelWidth: row[0].coords.w || '180',
+                    labelBg: row[0].styles?.backgroundColor || (index % 4 === 0 ? '#f9f9f9' : '#ffffff'),
+                    labelWidth: (row[0].coords && row[0].coords.w) ? row[0].coords.w : '180',
                     isFirstRow: isFirstRowOfGrid
                 })}
                         </td>
@@ -134,7 +140,10 @@ class EmailGeneratorService {
     renderComponent(comp) {
         const styles = this.normalizeStyles(comp.styles || {});
         if (comp.type === 'text') {
-            if (parseInt(styles['font-size']) >= 20 || styles['font-weight'] === 'bold' || styles['font-weight'] >= 700) {
+            const fontSize = styles['font-size'] ? parseInt(styles['font-size']) : 16;
+            const fontWeight = styles['font-weight'] || 'normal';
+
+            if (fontSize >= 20 || fontWeight === 'bold' || fontWeight >= 700) {
                 return EmailTableBuilder.createHeading(comp.content, 2, styles);
             }
             return EmailTableBuilder.createText(comp.content, styles);
