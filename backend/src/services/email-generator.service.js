@@ -69,10 +69,13 @@ class EmailGeneratorService {
      */
     processSection(section, allComponents, analysis) {
         // Filter components belonging to this section
-        const sectionComponents = allComponents.filter(c =>
-            c.sectionId === section.id ||
-            (c.coords && c.coords.y >= section.y && c.coords.y < section.y + section.height)
-        );
+        const sectionComponents = allComponents.filter(c => {
+            // Priority 1: Match by explicit sectionId
+            if (c.sectionId) return c.sectionId === section.id;
+
+            // Priority 2: Match by vertical coordinate range
+            return (c.coords && c.coords.y >= section.y && c.coords.y < section.y + section.height);
+        });
 
         if (sectionComponents.length === 0) return null;
 
@@ -229,7 +232,11 @@ class EmailGeneratorService {
             text: '#333333'
         });
 
-        html = html.replace('</head>', `  ${dmStyles.metaTags}\n  ${dmStyles.styles}\n</head>`);
+        // Ensure we only replace the FIRST <head> and don't create multiple style blocks
+        if (html.includes('</head>')) {
+            const styleBlock = `\n  <style type="text/css">\n${dmStyles.styles}\n  </style>\n</head>`;
+            html = html.replace('</head>', `${dmStyles.metaTags}${styleBlock}`);
+        }
 
         return html;
     }
