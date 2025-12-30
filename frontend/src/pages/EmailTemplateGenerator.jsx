@@ -74,7 +74,18 @@ export default function EmailTemplateGenerator() {
         } catch (err) {
             console.error('Full Error Object:', err);
             console.error('Response Data:', err.response?.data);
-            const errorMsg = err.response?.data?.error || err.response?.data?.message || err.message || 'Failed to process design';
+
+            let errorMsg = 'Failed to process design';
+            const serverError = err.response?.data?.error;
+
+            if (serverError) {
+                if (typeof serverError === 'string') errorMsg = serverError;
+                else if (typeof serverError === 'object' && serverError.message) errorMsg = serverError.message;
+                else errorMsg = JSON.stringify(serverError);
+            } else if (err.message) {
+                errorMsg = err.message;
+            }
+
             setError(errorMsg);
         } finally {
             setLoading(false);
