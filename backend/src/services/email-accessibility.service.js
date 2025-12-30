@@ -262,14 +262,18 @@ class EmailAccessibilityService {
     }
 
     getRelativeLuminance(hex) {
-        if (!hex || typeof hex !== 'string' || !hex.startsWith('#')) return 1; // Default to white luminance
+        if (!hex || typeof hex !== 'string') return 1;
+        hex = hex.trim();
+        if (!hex.startsWith('#')) return 1;
 
         let color = hex.substring(1);
+        // Handle 3-digit hex
         if (color.length === 3) {
             color = color.split('').map(char => char + char).join('');
         }
 
-        if (color.length !== 6) return 1;
+        // Strict hex validation regex
+        if (!/^[0-9A-Fa-f]{6}$/.test(color)) return 1;
 
         try {
             let r = parseInt(color.substring(0, 2), 16) / 255;
