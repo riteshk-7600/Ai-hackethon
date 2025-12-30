@@ -145,6 +145,24 @@ export class EmailTableBuilder {
   }
 
   /**
+   * Polish heading rendering (8y polish)
+   */
+  static createHeading(content, level = 1, styles = {}) {
+    const sizes = { 1: '32px', 2: '24px', 3: '20px' };
+    const defaultStyles = {
+      'font-family': "Helvetica, Arial, sans-serif",
+      'font-size': sizes[level] || '24px',
+      'font-weight': 'bold',
+      'line-height': '1.3',
+      'color': '#111111',
+      'margin': '0',
+      'mso-line-height-rule': 'exactly'
+    };
+    const combinedStyles = { ...defaultStyles, ...styles };
+    return `<div style="${this.stylesToString(combinedStyles)}">${content}</div>`;
+  }
+
+  /**
    * Create a Bulletproof Button (Table-Based for Outlook + Web)
    */
   static createButton(label, href = '#', styles = {}) {
