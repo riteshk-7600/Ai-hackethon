@@ -26,12 +26,16 @@ class EmailVisionService {
 
             const base64Image = imageBuffer.toString('base64');
 
-            const hasGemini = process.env.GEMINI_API_KEY && process.env.GEMINI_API_KEY !== 'test-key';
-            const hasOpenAI = process.env.OPENAI_API_KEY && process.env.OPENAI_API_KEY !== 'test-key';
-            const hasAnthropic = process.env.ANTHROPIC_API_KEY && process.env.ANTHROPIC_API_KEY !== 'test-key';
+            const geminiKey = process.env.GEMINI_API_KEY;
+            const openaiKey = process.env.OPENAI_API_KEY;
+            const anthropicKey = process.env.ANTHROPIC_API_KEY;
 
-            if (!hasGemini && !hasOpenAI && !hasAnthropic) {
-                logger.warn('No valid AI API keys configured (or using test-key). Returning demo template.');
+            const isGeminiValid = geminiKey && geminiKey !== 'test-key';
+            const isOpenAIValid = openaiKey && openaiKey !== 'test-key';
+            const isAnthropicValid = anthropicKey && anthropicKey !== 'test-key';
+
+            if (!isGeminiValid && !isOpenAIValid && !isAnthropicValid) {
+                logger.warn('No valid AI API keys configured (found test-key or undefined). Returning demo template.');
                 return this.getSeniorConversantRecovery();
             }
 
