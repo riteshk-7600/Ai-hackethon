@@ -129,14 +129,14 @@ JSON OUTPUT ONLY:
                 {
                     type: 'text',
                     sectionId: 'body',
-                    coords: { x: 30, y: 20, w: 540, h: 30 },
+                    coords: { x: 30, y: 120, w: 540, h: 30 },
                     styles: { fontSize: '18px', fontWeight: '700', color: '#111111', textAlign: 'left', margin: '0 0 10px 0' },
                     content: 'Dear Admin,'
                 },
                 {
                     type: 'text',
                     sectionId: 'body',
-                    coords: { x: 30, y: 55, w: 540, h: 30 },
+                    coords: { x: 30, y: 155, w: 540, h: 30 },
                     styles: { fontSize: '16px', color: '#333333', textAlign: 'left', margin: '0 0 25px 0' },
                     content: 'A new contact form has been submitted:'
                 },
@@ -144,70 +144,70 @@ JSON OUTPUT ONLY:
                 {
                     type: 'text',
                     sectionId: 'body',
-                    coords: { x: 30, y: 120, w: 180, h: 40 },
+                    coords: { x: 30, y: 220, w: 180, h: 40 },
                     styles: { fontSize: '14px', fontWeight: '700', color: '#111111', backgroundColor: '#f9f9f9' },
                     content: 'First Name:'
                 },
                 {
                     type: 'text',
                     sectionId: 'body',
-                    coords: { x: 210, y: 120, w: 360, h: 40 },
+                    coords: { x: 210, y: 220, w: 360, h: 40 },
                     styles: { fontSize: '14px', color: '#333333' },
                     content: '[First Name x]'
                 },
                 {
                     type: 'text',
                     sectionId: 'body',
-                    coords: { x: 30, y: 160, w: 180, h: 40 },
+                    coords: { x: 30, y: 260, w: 180, h: 40 },
                     styles: { fontSize: '14px', fontWeight: '700', color: '#111111', backgroundColor: '#f9f9f9' },
                     content: 'Last Name:'
                 },
                 {
                     type: 'text',
                     sectionId: 'body',
-                    coords: { x: 210, y: 160, w: 360, h: 40 },
+                    coords: { x: 210, y: 260, w: 360, h: 40 },
                     styles: { fontSize: '14px', color: '#333333' },
                     content: '[Last Name x]'
                 },
                 {
                     type: 'text',
                     sectionId: 'body',
-                    coords: { x: 30, y: 200, w: 180, h: 40 },
+                    coords: { x: 30, y: 300, w: 180, h: 40 },
                     styles: { fontSize: '14px', fontWeight: '700', color: '#111111', backgroundColor: '#f9f9f9' },
                     content: 'Email:'
                 },
                 {
                     type: 'text',
                     sectionId: 'body',
-                    coords: { x: 210, y: 200, w: 360, h: 40 },
+                    coords: { x: 210, y: 300, w: 360, h: 40 },
                     styles: { fontSize: '14px', color: '#333333' },
                     content: '[Email x]'
                 },
                 {
                     type: 'text',
                     sectionId: 'body',
-                    coords: { x: 30, y: 240, w: 180, h: 40 },
+                    coords: { x: 30, y: 340, w: 180, h: 40 },
                     styles: { fontSize: '14px', fontWeight: '700', color: '#111111', backgroundColor: '#f9f9f9' },
                     content: 'Phone:'
                 },
                 {
                     type: 'text',
                     sectionId: 'body',
-                    coords: { x: 210, y: 240, w: 360, h: 40 },
+                    coords: { x: 210, y: 340, w: 360, h: 40 },
                     styles: { fontSize: '14px', color: '#333333' },
                     content: '[Phone x]'
                 },
                 {
                     type: 'text',
                     sectionId: 'body',
-                    coords: { x: 30, y: 280, w: 180, h: 40 },
+                    coords: { x: 30, y: 380, w: 180, h: 40 },
                     styles: { fontSize: '14px', fontWeight: '700', color: '#111111', backgroundColor: '#f9f9f9' },
                     content: 'Reason for Nominating Guest:'
                 },
                 {
                     type: 'text',
                     sectionId: 'body',
-                    coords: { x: 210, y: 280, w: 360, h: 40 },
+                    coords: { x: 210, y: 380, w: 360, h: 40 },
                     styles: { fontSize: '14px', color: '#333333' },
                     content: '[Reason for Nominating Guest x]'
                 },
@@ -215,14 +215,14 @@ JSON OUTPUT ONLY:
                 {
                     type: 'text',
                     sectionId: 'footer',
-                    coords: { x: 0, y: 30, w: 600, h: 40 },
+                    coords: { x: 0, y: 730, w: 600, h: 40 },
                     styles: { fontSize: '24px', fontWeight: '800', color: '#ffffff', textAlign: 'center' },
                     content: 'conversant'
                 },
                 {
                     type: 'text',
                     sectionId: 'footer',
-                    coords: { x: 0, y: 80, w: 600, h: 20 },
+                    coords: { x: 0, y: 780, w: 600, h: 20 },
                     styles: { fontSize: '11px', color: '#88a39f', textAlign: 'center' },
                     content: '© 2025 Conversant Inc. All rights reserved.'
                 }
