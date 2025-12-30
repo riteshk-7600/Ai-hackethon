@@ -1,6 +1,5 @@
 
 import app from './src/server.js';
-import request from 'supertest';
 import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
