@@ -160,8 +160,48 @@ export class EmailTableBuilder {
   }
 
   /**
-   * Centered or Aligned Logo/Image with precise width (8y polish)
+   * Create multi-column layouts using floating tables for Outlook stacking
    */
+  static createColumns(columnData, options = {}) {
+    const { padding = '10px' } = options;
+    const columnCount = columnData.length;
+    const widthPerColumn = Math.floor(100 / columnCount);
+
+    let html = `<!--[if (gte mso 9)|(IE)]><table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><![endif]-->`;
+
+    columnData.forEach((colContent) => {
+      html += `
+      <!--[if (gte mso 9)|(IE)]><td valign="top" width="${widthPerColumn}%" style="padding: 0;"><![endif]-->
+      <div class="stack-column" style="display: inline-block; width: 100%; max-width: ${widthPerColumn}%; vertical-align: top;">
+        <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
+          <tr>
+            <td style="padding: ${padding};">
+              ${colContent}
+            </td>
+          </tr>
+        </table>
+      </div>
+      <!--[if (gte mso 9)|(IE)]></td><![endif]-->`;
+    });
+
+    html += `<!--[if (gte mso 9)|(IE)]></tr></table><![endif]-->`;
+
+    return html;
+  }
+
+  /**
+   * Generic 100% table wrapper
+   */
+  static wrapInTable(content, styles = {}) {
+    return `<table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="${this.stylesToString(styles)}">
+      <tr>
+        <td align="center">
+          ${content}
+        </td>
+      </tr>
+    </table>`;
+  }
+
   static createImage(src, alt, options = {}) {
     const { width = '200', height = 'auto', align = 'center' } = options;
     const styleString = this.stylesToString({
