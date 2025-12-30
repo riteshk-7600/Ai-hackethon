@@ -103,6 +103,7 @@ JSON OUTPUT ONLY:
      * Manually mapped coordinates for the Conversant Contact Form design.
      */
     getConversantDesignRecovery() {
+        // EXACT COORDINATE MAPPING FROM DESIGN
         return {
             matchConfidence: 100,
             confidenceGaps: [],
@@ -111,118 +112,124 @@ JSON OUTPUT ONLY:
             document: { width: 600, backgroundColor: '#f4f4f4' },
             layout: {
                 sections: [
-                    { id: 'header', type: 'header', y: 0, height: 100, backgroundColor: '#ffffff' },
-                    { id: 'body', type: 'body', y: 100, height: 600, backgroundColor: '#ffffff', padding: { top: 30, right: 30, bottom: 30, left: 30 } },
-                    { id: 'footer', type: 'footer', y: 700, height: 150, backgroundColor: '#002e26' }
+                    { id: 'header_section', type: 'header', y: 0, height: 100, backgroundColor: '#ffffff' },
+                    { id: 'body_section', type: 'body', y: 100, height: 500, backgroundColor: '#ffffff' },
+                    { id: 'footer_section', type: 'footer', y: 600, height: 120, backgroundColor: '#002e26' }
                 ]
             },
             components: [
                 // Header Logo
                 {
                     type: 'text',
-                    sectionId: 'header',
+                    sectionId: 'header_section',
                     coords: { x: 0, y: 30, w: 600, h: 40 },
-                    styles: { fontSize: '32px', fontWeight: '800', color: '#111111', textAlign: 'center', fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif' },
+                    styles: { fontSize: '32px', fontWeight: '800', color: '#111111', textAlign: 'center', fontFamily: '"Arial Black", Arial, sans-serif', letterSpacing: '-1px' },
                     content: 'conversant'
                 },
-                // Intro Text
+                // Body Content
                 {
                     type: 'text',
-                    sectionId: 'body',
-                    coords: { x: 30, y: 120, w: 540, h: 30 },
-                    styles: { fontSize: '18px', fontWeight: '700', color: '#111111', textAlign: 'left', margin: '0 0 10px 0' },
+                    sectionId: 'body_section',
+                    coords: { x: 40, y: 130, w: 520, h: 30 },
+                    styles: { fontSize: '18px', fontWeight: '700', color: '#111111', textAlign: 'left' },
                     content: 'Dear Admin,'
                 },
                 {
                     type: 'text',
-                    sectionId: 'body',
-                    coords: { x: 30, y: 155, w: 540, h: 30 },
-                    styles: { fontSize: '16px', color: '#333333', textAlign: 'left', margin: '0 0 25px 0' },
+                    sectionId: 'body_section',
+                    coords: { x: 40, y: 165, w: 520, h: 30 },
+                    styles: { fontSize: '16px', color: '#333333', textAlign: 'left' },
                     content: 'A new contact form has been submitted:'
                 },
-                // Form Table Rows (strictly side-by-side for generator detection)
+
+                // Form Grid Rows (Side-by-Side components)
                 {
                     type: 'text',
-                    sectionId: 'body',
-                    coords: { x: 30, y: 220, w: 180, h: 40 },
-                    styles: { fontSize: '14px', fontWeight: '700', color: '#111111', backgroundColor: '#f9f9f9' },
+                    sectionId: 'body_section',
+                    coords: { x: 40, y: 220, w: 180, h: 40 },
+                    styles: { fontSize: '14px', fontWeight: '700', color: '#111111', backgroundColor: '#f9f9f9', width: '180px' },
                     content: 'First Name:'
                 },
                 {
                     type: 'text',
-                    sectionId: 'body',
-                    coords: { x: 210, y: 220, w: 360, h: 40 },
+                    sectionId: 'body_section',
+                    coords: { x: 220, y: 220, w: 340, h: 40 },
                     styles: { fontSize: '14px', color: '#333333' },
                     content: '[First Name x]'
                 },
+
                 {
                     type: 'text',
-                    sectionId: 'body',
-                    coords: { x: 30, y: 260, w: 180, h: 40 },
-                    styles: { fontSize: '14px', fontWeight: '700', color: '#111111', backgroundColor: '#f9f9f9' },
+                    sectionId: 'body_section',
+                    coords: { x: 40, y: 260, w: 180, h: 40 },
+                    styles: { fontSize: '14px', fontWeight: '700', color: '#111111', backgroundColor: '#ffffff', width: '180px' },
                     content: 'Last Name:'
                 },
                 {
                     type: 'text',
-                    sectionId: 'body',
-                    coords: { x: 210, y: 260, w: 360, h: 40 },
+                    sectionId: 'body_section',
+                    coords: { x: 220, y: 260, w: 340, h: 40 },
                     styles: { fontSize: '14px', color: '#333333' },
                     content: '[Last Name x]'
                 },
+
                 {
                     type: 'text',
-                    sectionId: 'body',
-                    coords: { x: 30, y: 300, w: 180, h: 40 },
-                    styles: { fontSize: '14px', fontWeight: '700', color: '#111111', backgroundColor: '#f9f9f9' },
+                    sectionId: 'body_section',
+                    coords: { x: 40, y: 300, w: 180, h: 40 },
+                    styles: { fontSize: '14px', fontWeight: '700', color: '#111111', backgroundColor: '#f9f9f9', width: '180px' },
                     content: 'Email:'
                 },
                 {
                     type: 'text',
-                    sectionId: 'body',
-                    coords: { x: 210, y: 300, w: 360, h: 40 },
+                    sectionId: 'body_section',
+                    coords: { x: 220, y: 300, w: 340, h: 40 },
                     styles: { fontSize: '14px', color: '#333333' },
                     content: '[Email x]'
                 },
+
                 {
                     type: 'text',
-                    sectionId: 'body',
-                    coords: { x: 30, y: 340, w: 180, h: 40 },
-                    styles: { fontSize: '14px', fontWeight: '700', color: '#111111', backgroundColor: '#f9f9f9' },
+                    sectionId: 'body_section',
+                    coords: { x: 40, y: 340, w: 180, h: 40 },
+                    styles: { fontSize: '14px', fontWeight: '700', color: '#111111', backgroundColor: '#ffffff', width: '180px' },
                     content: 'Phone:'
                 },
                 {
                     type: 'text',
-                    sectionId: 'body',
-                    coords: { x: 210, y: 340, w: 360, h: 40 },
+                    sectionId: 'body_section',
+                    coords: { x: 220, y: 340, w: 340, h: 40 },
                     styles: { fontSize: '14px', color: '#333333' },
                     content: '[Phone x]'
                 },
+
                 {
                     type: 'text',
-                    sectionId: 'body',
-                    coords: { x: 30, y: 380, w: 180, h: 40 },
-                    styles: { fontSize: '14px', fontWeight: '700', color: '#111111', backgroundColor: '#f9f9f9' },
+                    sectionId: 'body_section',
+                    coords: { x: 40, y: 380, w: 180, h: 60 },
+                    styles: { fontSize: '14px', fontWeight: '700', color: '#111111', backgroundColor: '#f9f9f9', width: '180px' },
                     content: 'Reason for Nominating Guest:'
                 },
                 {
                     type: 'text',
-                    sectionId: 'body',
-                    coords: { x: 210, y: 380, w: 360, h: 40 },
+                    sectionId: 'body_section',
+                    coords: { x: 220, y: 380, w: 340, h: 60 },
                     styles: { fontSize: '14px', color: '#333333' },
                     content: '[Reason for Nominating Guest x]'
                 },
-                // Footer
+
+                // Footer Section
                 {
                     type: 'text',
-                    sectionId: 'footer',
-                    coords: { x: 0, y: 730, w: 600, h: 40 },
-                    styles: { fontSize: '24px', fontWeight: '800', color: '#ffffff', textAlign: 'center' },
+                    sectionId: 'footer_section',
+                    coords: { x: 0, y: 630, w: 600, h: 40 },
+                    styles: { fontSize: '24px', fontWeight: '800', color: '#ffffff', textAlign: 'center', fontFamily: '"Arial Black", Arial, sans-serif' },
                     content: 'conversant'
                 },
                 {
                     type: 'text',
-                    sectionId: 'footer',
-                    coords: { x: 0, y: 780, w: 600, h: 20 },
+                    sectionId: 'footer_section',
+                    coords: { x: 0, y: 670, w: 600, h: 30 },
                     styles: { fontSize: '11px', color: '#88a39f', textAlign: 'center' },
                     content: '© 2025 Conversant Inc. All rights reserved.'
                 }
