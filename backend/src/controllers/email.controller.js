@@ -11,6 +11,15 @@ import { logger } from '../utils/logger.js';
 import fs from 'fs/promises';
 
 class EmailController {
+    constructor() {
+        this.analyzeDesign = this.analyzeDesign.bind(this);
+        this.generateEmail = this.generateEmail.bind(this);
+        this.generateBasicTemplate = this.generateBasicTemplate.bind(this);
+        this.validateEmail = this.validateEmail.bind(this);
+        this.autoFixEmail = this.autoFixEmail.bind(this);
+        this.calculateCompatibilityMatrix = this.calculateCompatibilityMatrix.bind(this);
+    }
+
     /**
      * UPLOAD & ANALYZE
      */
