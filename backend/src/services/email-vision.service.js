@@ -43,9 +43,11 @@ class EmailVisionService {
     parseResponse(res) {
         try {
             const jsonPart = res.match(/\{[\s\S]*\}/);
+            if (!jsonPart) throw new Error('No JSON found in AI response');
             return JSON.parse(jsonPart[0]);
         } catch (e) {
-            return this.getSeniorConversantRecovery();
+            logger.error('Failed to parse AI response', { responseSnippet: res?.substring(0, 100), error: e.message });
+            throw new Error('AI Response Formatting Error: Could not parse generation result.');
         }
     }
 

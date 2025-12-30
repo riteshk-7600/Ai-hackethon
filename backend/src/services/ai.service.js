@@ -59,7 +59,7 @@ export class AIService {
         try {
             // Prefer Gemini for High-Fidelity Vision if available
             if (process.env.GEMINI_API_KEY) {
-                const model = this.genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
+                const model = this.genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
                 try {
                     const result = await model.generateContent([
                         prompt,
@@ -73,12 +73,14 @@ export class AIService {
                     const response = await result.response;
                     return response.text();
                 } catch (geminiError) {
-                    logger.warn('Gemini vision failed, falling back if possible:', geminiError.message);
+                    logger.warn('Gemini vision failed, attempting fallback...', geminiError.message);
+                    // If no other keys, throw. If others exist, swallow and let flow continue to OpenAI/Anthropic
                     if (!process.env.OPENAI_API_KEY && !process.env.ANTHROPIC_API_KEY) throw geminiError;
                 }
             }
 
-            if (this.provider === 'openai' && this.openai) {
+            // Fallback: OpenAI
+            if (process.env.OPENAI_API_KEY && this.openai) {
                 const response = await this.openai.chat.completions.create({
                     model: 'gpt-4o',
                     messages: [{
