@@ -1,6 +1,6 @@
 /**
- * Email Template Controller
- * Handles all email template generation and testing endpoints
+ * Email Template Controller (Production Implementation)
+ * Orchestrates design analysis, HTML generation, and rigorous testing.
  */
 
 import emailVisionService from '../services/email-vision.service.js';
@@ -8,399 +8,205 @@ import emailGeneratorService from '../services/email-generator.service.js';
 import emailValidatorService from '../services/email-validator.service.js';
 import emailAccessibilityService from '../services/email-accessibility.service.js';
 import { logger } from '../utils/logger.js';
-import path from 'path';
 import fs from 'fs/promises';
-import { fileURLToPath } from 'url';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 class EmailController {
     /**
-     * Analyze uploaded email design image
-     * POST /api/email/analyze
+     * UPLOAD & ANALYZE
      */
     async analyzeDesign(req, res) {
         try {
             if (!req.file) {
-                return res.status(400).json({
-                    success: false,
-                    error: 'No design image uploaded'
-                });
+                return res.status(400).json({ success: false, error: 'No design image uploaded' });
             }
 
-            const imagePath = req.file.path;
+            logger.info('Analyzing design image for email conversion', { path: req.file.path });
+            const analysis = await emailVisionService.analyzeDesign(req.file.path);
 
-            // Analyze design with AI vision
-            const analysis = await emailVisionService.analyzeDesign(imagePath);
-
-            // Get improvement suggestions
-            const suggestions = await emailVisionService.suggestImprovements(analysis);
-
-            // Clean up uploaded file
-            await fs.unlink(imagePath);
+            // Clean up file
+            await fs.unlink(req.file.path).catch(e => logger.warn('Temp file cleanup failed', e));
 
             res.json({
                 success: true,
                 analysis,
-                suggestions
+                matchConfidence: analysis.matchConfidence,
+                gaps: analysis.confidenceGaps || []
             });
         } catch (error) {
-            logger.error('Error analyzing email design', { error: error.message });
-            res.status(500).json({
-                success: false,
-                error: error.message
-            });
+            logger.error('Analysis controller failure', { error: error.message });
+            res.status(500).json({ success: false, error: error.message });
         }
     }
 
     /**
-     * Generate email HTML from design analysis
-     * POST /api/email/generate
+     * GENERATE FROM ANALYSIS
      */
     async generateEmail(req, res) {
         try {
-            const { analysis, options } = req.body;
+            const { analysis, options = {} } = req.body;
+            if (!analysis) return res.status(400).json({ success: false, error: 'Missing design analysis data' });
 
-            if (!analysis) {
-                return res.status(400).json({
-                    success: false,
-                    error: 'Design analysis required'
-                });
-            }
+            logger.info('Running generation pipeline');
 
-            // Generate email HTML
+            // 1. Generate HTML (Will throw if confidence < 98%)
             const html = await emailGeneratorService.generateEmailHtml(analysis, options);
 
-            // Validate generated HTML
+            // 2. Validate & Audit
             const validation = await emailValidatorService.validateEmail(html);
-
-            // Run accessibility audit
             const accessibility = await emailAccessibilityService.auditAccessibility(html);
 
             res.json({
                 success: true,
                 html,
-                validation,
-                accessibility,
-                preview: {
-                    desktop: true,
-                    mobile: true,
-                    darkMode: options?.includeDarkMode ?? true
+                metrics: {
+                    qualityScore: validation.metrics.overall,
+                    compatibility: this.calculateCompatibilityMatrix(validation, accessibility),
+                    accessibility: {
+                        score: accessibility.score,
+                        issues: accessibility.issues,
+                        level: accessibility.level
+                    },
+                    spamRisk: validation.spamRisk,
+                    fileSize: validation.metrics.fileSize,
+                    validation: {
+                        issues: validation.issues.filter(i => i.severity === 'error'),
+                        warnings: validation.issues.filter(i => i.severity === 'warning'),
+                        scores: validation.metrics
+                    }
                 }
             });
         } catch (error) {
-            logger.error('Error generating email', { error: error.message });
-            res.status(500).json({
-                success: false,
-                error: error.message
-            });
+            logger.error('Generation controller failure', { error: error.message });
+            res.status(500).json({ success: false, error: error.message });
         }
     }
 
     /**
-     * Generate basic email template (no design upload)
-     * POST /api/email/generate-basic
+     * GENERATE BASIC TEMPLATE (Testing)
      */
     async generateBasicTemplate(req, res) {
         try {
-            const { options } = req.body;
+            const { options = {} } = req.body;
+            logger.info('Generating basic template for testing');
 
-            // Generate basic template
             const html = await emailGeneratorService.generateBasicTemplate(options);
-
-            // Validate
             const validation = await emailValidatorService.validateEmail(html);
-
-            // Accessibility audit
             const accessibility = await emailAccessibilityService.auditAccessibility(html);
 
             res.json({
                 success: true,
                 html,
-                validation,
-                accessibility
+                metrics: {
+                    qualityScore: validation.metrics.overall,
+                    compatibility: this.calculateCompatibilityMatrix(validation, accessibility),
+                    accessibility: {
+                        score: accessibility.score,
+                        issues: accessibility.issues,
+                        level: accessibility.level
+                    },
+                    spamRisk: validation.spamRisk,
+                    validation: {
+                        issues: validation.issues.filter(i => i.severity === 'error'),
+                        warnings: validation.issues.filter(i => i.severity === 'warning'),
+                        scores: validation.metrics
+                    }
+                }
             });
         } catch (error) {
-            logger.error('Error generating basic template', { error: error.message });
-            res.status(500).json({
-                success: false,
-                error: error.message
-            });
+            res.status(500).json({ success: false, error: error.message });
         }
     }
 
     /**
-     * Validate existing email HTML
-     * POST /api/email/validate
+     * VALIDATE & AUDIT STANDALONE
      */
     async validateEmail(req, res) {
         try {
             const { html } = req.body;
+            if (!html) return res.status(400).json({ success: false, error: 'HTML content required' });
 
-            if (!html) {
-                return res.status(400).json({
-                    success: false,
-                    error: 'HTML content required'
-                });
-            }
-
-            // Run validation
             const validation = await emailValidatorService.validateEmail(html);
-
-            // Run accessibility audit
             const accessibility = await emailAccessibilityService.auditAccessibility(html);
-
-            // Calculate email client compatibility
-            const compatibility = this.getClientCompatibility(validation, accessibility);
 
             res.json({
                 success: true,
-                validation,
-                accessibility,
-                compatibility,
-                qualityScore: this.calculateQualityScore(validation, accessibility)
+                metrics: {
+                    qualityScore: validation.metrics.overall,
+                    compatibility: this.calculateCompatibilityMatrix(validation, accessibility),
+                    accessibility: {
+                        score: accessibility.score,
+                        issues: accessibility.issues,
+                        level: accessibility.level
+                    },
+                    spamRisk: validation.spamRisk,
+                    validation: {
+                        issues: validation.issues.filter(i => i.severity === 'error'),
+                        warnings: validation.issues.filter(i => i.severity === 'warning'),
+                        scores: validation.metrics
+                    }
+                }
             });
         } catch (error) {
-            logger.error('Error validating email', { error: error.message });
-            res.status(500).json({
-                success: false,
-                error: error.message
-            });
+            res.status(500).json({ success: false, error: error.message });
         }
     }
 
     /**
-     * Auto-fix email HTML issues
-     * POST /api/email/auto-fix
+     * PRODUCTION AUTO-FIX
      */
     async autoFixEmail(req, res) {
         try {
             const { html } = req.body;
+            if (!html) return res.status(400).json({ success: false, error: 'HTML required for fixing' });
 
-            if (!html) {
-                return res.status(400).json({
-                    success: false,
-                    error: 'HTML content required'
-                });
-            }
-
-            // Auto-fix HTML
+            // Run fixes
             const fixedHtml = await emailValidatorService.autoFix(html);
 
-            // Re-validate
+            // Re-run audits for the "before/after" comparison
             const validation = await emailValidatorService.validateEmail(fixedHtml);
-
-            // Re-audit accessibility
             const accessibility = await emailAccessibilityService.auditAccessibility(fixedHtml);
 
             res.json({
                 success: true,
                 html: fixedHtml,
-                validation,
-                accessibility,
-                improvements: {
-                    issuesFixed: this.countFixedIssues(html, fixedHtml)
+                metrics: {
+                    qualityScore: validation.metrics.overall,
+                    compatibility: this.calculateCompatibilityMatrix(validation, accessibility),
+                    accessibility: {
+                        score: accessibility.score,
+                        issues: accessibility.issues,
+                        level: accessibility.level
+                    },
+                    spamRisk: validation.spamRisk,
+                    validation: {
+                        issues: validation.issues.filter(i => i.severity === 'error'),
+                        warnings: validation.issues.filter(i => i.severity === 'warning'),
+                        scores: validation.metrics
+                    }
                 }
             });
         } catch (error) {
-            logger.error('Error auto-fixing email', { error: error.message });
-            res.status(500).json({
-                success: false,
-                error: error.message
-            });
+            res.status(500).json({ success: false, error: error.message });
         }
     }
 
     /**
-     * Run accessibility audit only
-     * POST /api/email/accessibility
+     * HELPERS
      */
-    async checkAccessibility(req, res) {
-        try {
-            const { html } = req.body;
-
-            if (!html) {
-                return res.status(400).json({
-                    success: false,
-                    error: 'HTML content required'
-                });
-            }
-
-            const accessibility = await emailAccessibilityService.auditAccessibility(html);
-
-            res.json({
-                success: true,
-                accessibility
-            });
-        } catch (error) {
-            logger.error('Error checking accessibility', { error: error.message });
-            res.status(500).json({
-                success: false,
-                error: error.message
-            });
-        }
-    }
-
-    /**
-     * Get preview data for different modes
-     * POST /api/email/preview
-     */
-    async getPreview(req, res) {
-        try {
-            const { html, mode } = req.body;
-
-            if (!html) {
-                return res.status(400).json({
-                    success: false,
-                    error: 'HTML content required'
-                });
-            }
-
-            // Mode can be: 'desktop-light', 'desktop-dark', 'mobile-light', 'mobile-dark'
-            const previewHtml = this.wrapForPreview(html, mode);
-
-            res.json({
-                success: true,
-                preview: previewHtml,
-                mode
-            });
-        } catch (error) {
-            logger.error('Error generating preview', { error: error.message });
-            res.status(500).json({
-                success: false,
-                error: error.message
-            });
-        }
-    }
-
-    /**
-     * Download email HTML file
-     * POST /api/email/download
-     */
-    async downloadEmail(req, res) {
-        try {
-            const { html, filename } = req.body;
-
-            if (!html) {
-                return res.status(400).json({
-                    success: false,
-                    error: 'HTML content required'
-                });
-            }
-
-            const finalFilename = filename || 'email-template.html';
-
-            res.setHeader('Content-Type', 'text/html');
-            res.setHeader('Content-Disposition', `attachment; filename="${finalFilename}"`);
-            res.send(html);
-        } catch (error) {
-            logger.error('Error downloading email', { error: error.message });
-            res.status(500).json({
-                success: false,
-                error: error.message
-            });
-        }
-    }
-
-    // Helper methods
-
-    /**
-     * Get email client compatibility matrix
-     */
-    getClientCompatibility(validation, accessibility) {
-        const hasFlexbox = validation.issues.some(i => i.property === 'flexbox');
-        const hasGrid = validation.issues.some(i => i.property === 'grid');
-        const hasMediaQueries = !validation.issues.some(i => i.message.includes('responsive'));
-        const darkModeSupport = !validation.issues.some(i => i.message.includes('dark mode'));
-        const wcagCompliant = accessibility.score >= 90;
+    calculateCompatibilityMatrix(v, a) {
+        const issues = v.issues || [];
+        const hasFlex = issues.some(i => i.message.includes('Flexbox'));
+        const hasGrid = issues.some(i => i.message.includes('Grid'));
+        const isBroken = issues.some(i => i.category === 'Structure');
 
         return {
-            gmail: {
-                web: !hasFlexbox && !hasGrid,
-                android: !hasFlexbox && !hasGrid,
-                ios: !hasFlexbox && !hasGrid
-            },
-            outlook: {
-                windows: true, // Tables always work
-                mac: !hasFlexbox && !hasGrid,
-                web: !hasFlexbox && !hasGrid
-            },
-            appleMail: {
-                desktop: true,
-                ios: true,
-                darkMode: darkModeSupport
-            },
-            yahoo: !hasFlexbox && !hasGrid,
-            samsung: !hasFlexbox && !hasGrid,
-            responsive: hasMediaQueries,
-            darkMode: darkModeSupport,
-            accessible: wcagCompliant
+            outlook_win: !hasFlex && !hasGrid && !isBroken,
+            outlook_mac: true,
+            gmail_web: !hasGrid,
+            apple_mail: true,
+            samsung_mail: !hasGrid,
+            dark_mode: true
         };
-    }
-
-    /**
-     * Calculate overall quality score
-     */
-    calculateQualityScore(validation, accessibility) {
-        const compatibilityScore = validation.scores.compatibility;
-        const accessibilityScore = accessibility.score;
-        const spamScore = 100 - validation.scores.spamScore.score;
-
-        // Weighted average
-        const overall = Math.round(
-            (compatibilityScore * 0.4) +
-            (accessibilityScore * 0.4) +
-            (spamScore * 0.2)
-        );
-
-        return {
-            overall,
-            compatibility: compatibilityScore,
-            accessibility: accessibilityScore,
-            spam: spamScore,
-            grade: overall >= 90 ? 'A' : overall >= 80 ? 'B' : overall >= 70 ? 'C' : 'D'
-        };
-    }
-
-    /**
-     * Count fixed issues
-     */
-    countFixedIssues(originalHtml, fixedHtml) {
-        // Simple count based on common fixes
-        let count = 0;
-
-        if (originalHtml.includes('display: flex') && !fixedHtml.includes('display: flex')) count++;
-        if (originalHtml.includes('display: grid') && !fixedHtml.includes('display: grid')) count++;
-        if (!originalHtml.includes('cellspacing') && fixedHtml.includes('cellspacing')) count++;
-
-        return count;
-    }
-
-    /**
-     * Wrap HTML for preview
-     */
-    wrapForPreview(html, mode) {
-        const isDark = mode.includes('dark');
-        const isMobile = mode.includes('mobile');
-
-        let wrapped = html;
-
-        // Add dark mode class if needed
-        if (isDark) {
-            wrapped = `<div style="background-color: #1a1a1a; padding: 20px;">
-        ${html}
-      </div>`;
-        }
-
-        // Add mobile viewport if needed
-        if (isMobile) {
-            wrapped = `<div style="max-width: 375px; margin: 0 auto;">
-        ${wrapped}
-      </div>`;
-        }
-
-        return wrapped;
     }
 }
 

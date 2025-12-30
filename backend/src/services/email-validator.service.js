@@ -1,6 +1,6 @@
 /**
- * Email Validator Service
- * Validates email HTML for compatibility, errors, and best practices
+ * Email Validator & Auto-Fix Service (Production Grade)
+ * Validates against industry standards and fixes code for Outlook/Gmail compatibility.
  */
 
 import { logger } from '../utils/logger.js';
@@ -8,399 +8,206 @@ import { JSDOM } from 'jsdom';
 
 class EmailValidatorService {
     /**
-     * Validate email HTML comprehensively
+     * Comprehensive Validation
      */
     async validateEmail(html) {
         try {
-            logger.info('Validating email HTML');
+            logger.info('Validating email for production readiness');
 
-            const issues = [];
-            const warnings = [];
-            const suggestions = [];
-
-            // Parse HTML
             const dom = new JSDOM(html);
-            const document = dom.window.document;
+            const doc = dom.window.document;
+            const issues = [];
 
-            // Run all validation checks
-            issues.push(...this.checkHtmlStructure(document));
-            issues.push(...this.checkEmailClientCompatibility(html, document));
-            warnings.push(...this.checkBestPractices(document));
-            suggestions.push(...this.checkOptimizations(html, document));
+            // 1. Structural Validation
+            issues.push(...this.validateStructure(html, doc));
 
-            // Calculate scores
-            const compatibility = this.calculateCompatibilityScore(issues, warnings);
-            const spamScore = this.calculateSpamScore(html, document);
-            const fileSize = Buffer.byteLength(html, 'utf8');
+            // 2. Compatibility Checks
+            issues.push(...this.validateCompatibility(html, doc));
 
-            logger.info('Email validation complete', {
-                issuesCount: issues.length,
-                warningsCount: warnings.length,
-                compatibility,
-                spamScore
-            });
+            // 3. Spam Trigger Analysis
+            const spam = this.analyzeSpamRisk(html, doc);
+
+            // 4. Calculate Scores (Real metrics)
+            const scores = this.calculateScores(issues, spam, html.length);
 
             return {
                 valid: issues.filter(i => i.severity === 'error').length === 0,
                 issues,
-                warnings,
-                suggestions,
-                scores: {
-                    compatibility,
-                    spamScore,
-                    fileSize,
-                    fileSizeFormatted: this.formatFileSize(fileSize)
-                }
+                spamRisk: spam,
+                qualityScore: scores.overall,
+                metrics: scores
             };
         } catch (error) {
-            logger.error('Error validating email', { error: error.message });
-            throw new Error(`Email validation failed: ${error.message}`);
+            logger.error('Validator engine failure', { error: error.message });
+            throw new Error(`Validation Error: ${error.message}`);
         }
     }
 
     /**
-     * Check HTML structure for errors
-     */
-    checkHtmlStructure(document) {
-        const issues = [];
-
-        // Check for unclosed tags (JSDOM helps with this)
-        const allElements = document.querySelectorAll('*');
-        allElements.forEach((element, index) => {
-            // Check for common issues
-            if (element.tagName === 'TABLE') {
-                if (!element.hasAttribute('cellspacing')) {
-                    issues.push({
-                        type: 'html_structure',
-                        severity: 'warning',
-                        message: 'Table missing cellspacing attribute',
-                        line: this.getLineNumber(element),
-                        autoFix: true
-                    });
-                }
-            }
-
-            if (element.tagName === 'IMG') {
-                if (!element.hasAttribute('alt')) {
-                    issues.push({
-                        type: 'html_structure',
-                        severity: 'error',
-                        message: `Image missing alt text`,
-                        line: this.getLineNumber(element),
-                        autoFix: true
-                    });
-                }
-                if (!element.hasAttribute('width') || !element.hasAttribute('height')) {
-                    issues.push({
-                        type: 'html_structure',
-                        severity: 'warning',
-                        message: 'Image missing width/height attributes',
-                        line: this.getLineNumber(element),
-                        autoFix: true
-                    });
-                }
-            }
-        });
-
-        return issues;
-    }
-
-    /**
-     * Check email client compatibility
-     */
-    checkEmailClientCompatibility(html, document) {
-        const issues = [];
-
-        // Check for unsupported CSS
-        const unsupportedCss = [
-            { prop: 'flexbox', regex: /display:\s*flex/gi, message: 'Flexbox not supported in email clients' },
-            { prop: 'grid', regex: /display:\s*grid/gi, message: 'CSS Grid not supported in email clients' },
-            { prop: 'position', regex: /position:\s*(absolute|fixed|sticky)/gi, message: 'CSS position not fully supported' },
-            { prop: 'float', regex: /float:\s*(left|right)/gi, message: 'CSS float not recommended for emails' },
-            { prop: 'transform', regex: /transform:/gi, message: 'CSS transform not supported in most email clients' }
-        ];
-
-        unsupportedCss.forEach(({ prop, regex, message }) => {
-            if (regex.test(html)) {
-                issues.push({
-                    type: 'compatibility',
-                    severity: 'error',
-                    message: message,
-                    property: prop,
-                    autoFix: true
-                });
-            }
-        });
-
-        // Check for external stylesheets
-        const linkTags = document.querySelectorAll('link[rel="stylesheet"]');
-        if (linkTags.length > 0) {
-            issues.push({
-                type: 'compatibility',
-                severity: 'error',
-                message: 'External stylesheets not supported - use inline styles only',
-                count: linkTags.length,
-                autoFix: true
-            });
-        }
-
-        // Check for embedded style tags (acceptable but inline is better)
-        const styleTags = document.querySelectorAll('style');
-        const hasResponsiveStyles = Array.from(styleTags).some(
-            tag => tag.textContent.includes('@media')
-        );
-
-        if (!hasResponsiveStyles) {
-            issues.push({
-                type: 'compatibility',
-                severity: 'info',
-                message: 'No responsive media queries found - email may not be mobile-friendly'
-            });
-        }
-
-        // Check for JavaScript
-        const scriptTags = document.querySelectorAll('script');
-        if (scriptTags.length > 0) {
-            issues.push({
-                type: 'compatibility',
-                severity: 'error',
-                message: 'JavaScript not supported in email clients',
-                count: scriptTags.length,
-                autoFix: true
-            });
-        }
-
-        return issues;
-    }
-
-    /**
-     * Check best practices
-     */
-    checkBestPractices(document) {
-        const warnings = [];
-
-        // Check email width
-        const mainTable = document.querySelector('table[width="600"]');
-        if (!mainTable) {
-            warnings.push({
-                type: 'best_practice',
-                severity: 'warning',
-                message: 'Recommended email width is 600px for desktop compatibility'
-            });
-        }
-
-        // Check for proper DOCTYPE
-        const doctype = document.doctype;
-        if (!doctype || !doctype.publicId.includes('XHTML')) {
-            warnings.push({
-                type: 'best_practice',
-                severity: 'warning',
-                message: 'Use XHTML DOCTYPE for best email client compatibility',
-                autoFix: true
-            });
-        }
-
-        // Check meta viewport
-        const viewport = document.querySelector('meta[name="viewport"]');
-        if (!viewport) {
-            warnings.push({
-                type: 'best_practice',
-                severity: 'warning',
-                message: 'Missing viewport meta tag for mobile responsiveness',
-                autoFix: true
-            });
-        }
-
-        // Check image formats
-        const images = document.querySelectorAll('img[src]');
-        images.forEach(img => {
-            const src = img.getAttribute('src');
-            if (src && src.includes('.webp')) {
-                warnings.push({
-                    type: 'best_practice',
-                    severity: 'warning',
-                    message: 'WebP images may not display in all email clients - use JPG or PNG'
-                });
-            }
-        });
-
-        return warnings;
-    }
-
-    /**
-     * Check optimizations
-     */
-    checkOptimizations(html, document) {
-        const suggestions = [];
-
-        // Check file size
-        const fileSize = Buffer.byteLength(html, 'utf8');
-        if (fileSize > 102400) { // 100KB
-            suggestions.push({
-                type: 'optimization',
-                severity: 'info',
-                message: `Email HTML is ${this.formatFileSize(fileSize)}. Consider optimizing to under 100KB.`
-            });
-        }
-
-        // Check for inline images
-        if (html.includes('data:image')) {
-            suggestions.push({
-                type: 'optimization',
-                severity: 'warning',
-                message: 'Inline base64 images increase file size. Consider hosting images externally.'
-            });
-        }
-
-        // Check for minification opportunity
-        const whitespaceRatio = (html.match(/\s/g) || []).length / html.length;
-        if (whitespaceRatio > 0.3) {
-            suggestions.push({
-                type: 'optimization',
-                severity: 'info',
-                message: 'HTML can be minified to reduce file size',
-                autoFix: true
-            });
-        }
-
-        return suggestions;
-    }
-
-    /**
-     * Calculate professional email spam score
-     */
-    calculateSpamScore(html, document) {
-        let spamScore = 0;
-        const spamIssues = [];
-
-        // 1. Spam trigger words (High density)
-        const highRiskWords = [
-            'FREE', 'WINNER', 'CASH', 'BONUS', 'CLICK HERE',
-            '100% OFF', 'ACT NOW', 'LIMITED TIME', 'URGENT',
-            'GUARANTEED', 'NO COST', 'INCREASE SALES', 'EARN MONEY'
-        ];
-
-        const text = document.body.textContent.toUpperCase();
-        highRiskWords.forEach(word => {
-            const count = (text.match(new RegExp(`\\b${word}\\b`, 'g')) || []).length;
-            if (count > 0) {
-                spamScore += count * 8;
-                spamIssues.push(`High-risk spam word "${word}" found ${count} time(s)`);
-            }
-        });
-
-        // 2. High-density punctuation
-        const exclamationCount = (text.match(/!/g) || []).length;
-        if (exclamationCount > 3) {
-            spamScore += exclamationCount * 2;
-            spamIssues.push(`Excessive use of exclamation marks (${exclamationCount})`);
-        }
-
-        // 3. Image-to-Text Ratio (Production heuristic)
-        const textLength = document.body.textContent.trim().length;
-        const images = document.querySelectorAll('img');
-        if (images.length > 3 && textLength < 400) {
-            spamScore += 25;
-            spamIssues.push('Low image-to-text ratio (potential spam trigger)');
-        }
-
-        // 4. Broken/Missing Links
-        const links = document.querySelectorAll('a');
-        const brokenLinks = Array.from(links).filter(a => !a.href || a.href === '#').length;
-        if (brokenLinks > 0) {
-            spamScore += brokenLinks * 5;
-            spamIssues.push(`${brokenLinks} placeholder links found`);
-        }
-
-        return {
-            score: Math.min(spamScore, 100),
-            risk: spamScore < 15 ? 'low' : spamScore < 40 ? 'medium' : 'high',
-            issues: spamIssues
-        };
-    }
-
-    /**
-     * Calculate compatibility score
-     */
-    calculateCompatibilityScore(issues, warnings) {
-        let score = 100;
-
-        issues.forEach(issue => {
-            if (issue.severity === 'error') score -= 10;
-            if (issue.severity === 'warning') score -= 5;
-        });
-
-        warnings.forEach(warning => {
-            score -= 3;
-        });
-
-        return Math.max(0, Math.min(100, score));
-    }
-
-    /**
-     * Auto-fix common issues (Engine grade)
+     * Fix bad HTML and inject Outlook hacks
      */
     async autoFix(html) {
         try {
-            logger.info('Running production-grade auto-fix');
+            logger.info('Running production-grade Auto-Fix engine');
 
             const dom = new JSDOM(html);
-            const document = dom.window.document;
+            const doc = dom.window.document;
 
-            // 1. Enforce role="presentation" on all layout tables
-            document.querySelectorAll('table').forEach(table => {
-                if (!table.getAttribute('role')) {
-                    table.setAttribute('role', 'presentation');
-                }
-                // Enforce email-safe defaults
-                if (!table.getAttribute('cellspacing')) table.setAttribute('cellspacing', '0');
-                if (!table.getAttribute('cellpadding')) table.setAttribute('cellpadding', '0');
-                if (!table.getAttribute('border')) table.setAttribute('border', '0');
-            });
+            // 1. Force table properties for every table
+            doc.querySelectorAll('table').forEach(table => {
+                table.setAttribute('role', 'presentation');
+                table.setAttribute('border', '0');
+                table.setAttribute('cellpadding', '0');
+                table.setAttribute('cellspacing', '0');
 
-            // 2. Fix missing alt text
-            document.querySelectorAll('img').forEach((img, i) => {
-                if (!img.getAttribute('alt')) {
-                    img.setAttribute('alt', `Email Image ${i + 1}`);
+                // Enforce mso-table-lspace/rspace on containers
+                const currentStyle = table.getAttribute('style') || '';
+                if (!currentStyle.includes('mso-table-lspace')) {
+                    table.setAttribute('style', `mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-collapse: collapse !important; ${currentStyle}`);
                 }
             });
 
-            // 3. Strip incompatible CSS and Scripts
+            // 2. Clean illegal attributes and styles
+            doc.querySelectorAll('*').forEach(el => {
+                const style = el.getAttribute('style') || '';
+
+                // Remove flex/grid
+                let fixedStyle = style.replace(/display:\s*(flex|grid)[^;]*/gi, '');
+
+                // Inject mso-line-height-rule: exactly for line-height
+                if (fixedStyle.includes('line-height') && !fixedStyle.includes('mso-line-height-rule')) {
+                    fixedStyle = fixedStyle.replace(/line-height:\s*([^;"]+)/g, 'line-height: $1; mso-line-height-rule: exactly');
+                }
+
+                el.setAttribute('style', fixedStyle);
+            });
+
+            // 3. Fix images (alt, display:block)
+            doc.querySelectorAll('img').forEach(img => {
+                if (!img.getAttribute('alt')) img.setAttribute('alt', '');
+                const style = img.getAttribute('style') || '';
+                if (!style.includes('display: block') && !style.includes('display:block')) {
+                    img.setAttribute('style', `display: block; ${style}`);
+                }
+            });
+
             let fixedHtml = dom.serialize();
 
-            fixedHtml = fixedHtml.replace(/display:\s*flex[^;"]*/gi, '');
-            fixedHtml = fixedHtml.replace(/display:\s*grid[^;"]*/gi, '');
-            fixedHtml = fixedHtml.replace(/position:\s*(absolute|fixed|sticky)[^;"]*/gi, '');
-            fixedHtml = fixedHtml.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
-
-            // 4. Ensure XHTML DOCTYPE
+            // 4. Regex-level global fixes
+            // Ensure XHTML doctype
             if (!fixedHtml.includes('<!DOCTYPE')) {
-                const xhtmlDoctype = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">\n';
-                fixedHtml = xhtmlDoctype + fixedHtml;
+                fixedHtml = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">\n' + fixedHtml;
             }
 
-            logger.info('Auto-fix complete');
+            // Remove scripts
+            fixedHtml = fixedHtml.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '<!-- [JS removed for email safety] -->');
+
             return fixedHtml;
         } catch (error) {
-            logger.error('Auto-fix failed', { error: error.message });
+            logger.error('Auto-fix engine failure', { error: error.message });
             throw error;
         }
     }
 
-    /**
-     * Get line number for element (approximate)
-     */
-    getLineNumber(element) {
-        return 'N/A'; // JSDOM doesn't provide line numbers easily
+    validateStructure(html, doc) {
+        const issues = [];
+
+        // Check for broken tags (simple heuristic)
+        const openTags = (html.match(/<[a-zA-Z]+/g) || []).length;
+        const closeTags = (html.match(/<\/[a-zA-Z]+/g) || []).length;
+        if (Math.abs(openTags - closeTags) > 5) {
+            issues.push({
+                severity: 'error',
+                category: 'Structure',
+                message: 'Significant tag mismatch detected. HTML may be malformed.',
+                autoFix: true
+            });
+        }
+
+        if (!doc.querySelector('table')) {
+            issues.push({
+                severity: 'error',
+                category: 'Structure',
+                message: 'No <table> found. Professional emails require table-based layouts for Outlook support.',
+                autoFix: true
+            });
+        }
+
+        return issues;
     }
 
-    /**
-     * Format file size
-     */
-    formatFileSize(bytes) {
-        if (bytes < 1024) return `${bytes} B`;
-        if (bytes < 1048576) return `${(bytes / 1024).toFixed(2)} KB`;
-        return `${(bytes / 1048576).toFixed(2)} MB`;
+    validateCompatibility(html, doc) {
+        const issues = [];
+
+        // Flex/Grid detection
+        if (/display:\s*(flex|grid)/i.test(html)) {
+            issues.push({
+                severity: 'error',
+                category: 'Compatibility',
+                message: 'Flexbox or CSS Grid detected. These are NOT supported in Outlook (Windows).',
+                autoFix: true
+            });
+        }
+
+        // Web Fonts without fallback
+        const fontStacks = html.match(/font-family:\s*([^;"]+)/g) || [];
+        fontStacks.forEach(stack => {
+            if (stack.includes('Google') && !stack.includes('sans-serif') && !stack.includes('serif')) {
+                issues.push({
+                    severity: 'warning',
+                    category: 'Compatibility',
+                    message: 'Web font used without a generic fallback (sans-serif/serif).',
+                    autoFix: false
+                });
+            }
+        });
+
+        return issues;
+    }
+
+    analyzeSpamRisk(html, doc) {
+        let score = 0;
+        const triggers = [];
+        const text = doc.body.textContent.toLowerCase();
+
+        const words = ['free', 'winner', 'cash', 'guaranteed', '100% off', 'urgent', 'act now'];
+        words.forEach(word => {
+            if (text.includes(word)) {
+                score += 10;
+                triggers.push(`Spam keyword suspect: "${word}"`);
+            }
+        });
+
+        // Image to text ratio
+        const textLength = text.trim().length;
+        const images = doc.querySelectorAll('img').length;
+        if (images > 2 && textLength < 200) {
+            score += 30;
+            triggers.push('High image-to-text ratio (often flagged as spam)');
+        }
+
+        return {
+            score: Math.min(score, 100),
+            rating: score < 20 ? 'Low' : score < 50 ? 'Medium' : 'High',
+            triggers
+        };
+    }
+
+    calculateScores(issues, spam, length) {
+        let compatibility = 100;
+        issues.forEach(i => {
+            if (i.severity === 'error') compatibility -= 15;
+            else compatibility -= 7;
+        });
+
+        const spamQuality = 100 - spam.score;
+        const overall = Math.round((compatibility * 0.6) + (spamQuality * 0.4));
+
+        return {
+            overall: Math.max(5, Math.min(99, overall)), // Never 0 or 100 as per request
+            compatibility: Math.max(10, compatibility),
+            spamQuality
+        };
     }
 }
 

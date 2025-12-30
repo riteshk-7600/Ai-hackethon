@@ -61,13 +61,4 @@ router.post('/validate', emailController.validateEmail);
 // Auto-fix email HTML
 router.post('/auto-fix', emailController.autoFixEmail);
 
-// Check accessibility
-router.post('/accessibility', emailController.checkAccessibility);
-
-// Get preview
-router.post('/preview', emailController.getPreview);
-
-// Download email
-router.post('/download', emailController.downloadEmail);
-
 export default router;

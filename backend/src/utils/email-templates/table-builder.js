@@ -1,244 +1,233 @@
 /**
- * Email Table Builder Utility
- * Generates table-based HTML structures for email templates
+ * Email Table Builder Utility (Production-Grade Engine)
+ * Generates table-based HTML structures for email templates with maximum client compatibility.
  */
 
 export class EmailTableBuilder {
   /**
-   * Create email boilerplate with proper DOCTYPE and meta tags
+   * Create email boilerplate with maximum compatibility DOCTYPE and meta tags
    */
-  static createBoilerplate(title = 'Email Template') {
+  static createBoilerplate(title = 'Email Template', options = {}) {
+    const { backgroundColor = '#f4f4f4' } = options;
     return `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office" lang="en">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-  <meta name="format-detection" content="telephone=no"/>
-  <meta name="format-detection" content="date=no"/>
-  <meta name="format-detection" content="address=no"/>
-  <meta name="format-detection" content="email=no"/>
   <meta name="x-apple-disable-message-reformatting"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="supported-color-schemes" content="light dark"/>
+  <!--[if !mso]><!-->
+  <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+  <!--<![endif]-->
   <title>${this.escapeHtml(title)}</title>
   <!--[if mso]>
-  <noscript>
-    <xml>
-      <o:OfficeDocumentSettings>
-        <o:AllowPNG/>
-        <o:PixelsPerInch>96</o:PixelsPerInch>
-      </o:OfficeDocumentSettings>
-    </xml>
-  </noscript>
+  <xml>
+    <o:OfficeDocumentSettings>
+      <o:AllowPNG/>
+      <o:PixelsPerInch>96</o:PixelsPerInch>
+    </o:OfficeDocumentSettings>
+  </xml>
   <![endif]-->
   <style type="text/css">
-    /* Reset styles */
+    :root { color-scheme: light dark; supported-color-schemes: light dark; }
+    #outlook a { padding: 0; }
+    .ExternalClass { width: 100%; }
+    .ExternalClass, .ExternalClass p, .ExternalClass span, .ExternalClass font, .ExternalClass td, .ExternalClass div { line-height: 100%; }
     body { margin: 0; padding: 0; width: 100% !important; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+    table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-collapse: collapse !important; }
     img { border: 0; height: auto; line-height: 100%; outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; }
-    table { border-collapse: collapse !important; mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
-    td { border-collapse: collapse; }
-    a { text-decoration: none; }
     
-    /* Dark mode styles */
     @media (prefers-color-scheme: dark) {
       .dark-mode-bg { background-color: #1a1a1a !important; }
       .dark-mode-text { color: #ffffff !important; }
-      .dark-mode-secondary { color: #cccccc !important; }
+      .dark-mode-secondary { color: #aaaaaa !important; }
     }
     
-    /* Mobile responsive styles */
     @media only screen and (max-width: 600px) {
-      .mobile-full-width { width: 100% !important; max-width: 100% !important; }
-      .mobile-padding { padding: 15px !important; }
-      .mobile-hide { display: none !important; }
-      .mobile-center { text-align: center !important; }
-      .mobile-stack { display: block !important; width: 100% !important; }
+      .mobile-full-width { width: 100% !important; max-width: 100% !important; height: auto !important; }
+      .stack-column { display: block !important; width: 100% !important; max-width: 100% !important; direction: ltr !important; }
+      .mobile-padding { padding: 20px !important; }
+      .mobile-center { text-align: center !important; margin: 0 auto !important; }
     }
   </style>
 </head>
-<body style="margin: 0; padding: 0; width: 100%; background-color: #f4f4f4;">
-  <center>
-    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: #f4f4f4;">
+<body style="margin: 0; padding: 0; background-color: ${backgroundColor};">
+  <div role="article" aria-roledescription="email" lang="en" style="background-color: ${backgroundColor};">
+    <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: ${backgroundColor};">
       <tr>
-        <td style="padding: 20px 0;">
-          <!-- EMAIL CONTENT GOES HERE -->
+        <td align="center" style="padding: 0;">
+          <!--[if (gte mso 9)|(IE)]><table align="center" border="0" cellspacing="0" cellpadding="0" width="600"><tr><td align="center" valign="top" width="600"><![endif]-->
+          <div style="max-width: 600px; margin: 0 auto;">
+            <!-- EMAIL CONTENT GOES HERE -->
+          </div>
+          <!--[if (gte mso 9)|(IE)]></td></tr></table><![endif]-->
         </td>
       </tr>
     </table>
-  </center>
+  </div>
 </body>
 </html>`;
   }
 
   /**
-   * Create main container table (600px wide for desktop)
+   * Create a standard <table> wrapper for components
    */
-  static createContainer(content, bgColor = '#ffffff', width = 600) {
-    return `
-    <!--[if (gte mso 9)|(IE)]>
-    <table align="center" border="0" cellspacing="0" cellpadding="0" width="${width}" style="width:${width}px;">
-    <tr>
-    <td align="center" valign="top" width="${width}" style="width:${width}px;">
-    <![endif]-->
-    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" class="mobile-full-width" style="margin: 0 auto; max-width: ${width}px; background-color: ${bgColor};">
+  static wrapInTable(content, styles = {}) {
+    const styleString = this.stylesToString(styles);
+    return `<table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%"${styleString ? ` style="${styleString}"` : ''}>
       <tr>
-        <td align="center" valign="top">
+        <td style="padding: 0;">
           ${content}
         </td>
       </tr>
-    </table>
-    <!--[if (gte mso 9)|(IE)]>
-    </td>
-    </tr>
-    </table>
-    <![endif]-->`;
+    </table>`;
   }
 
   /**
-   * Create a row with specified content and styling
+   * Create a row with precise TD-level styling
    */
-  static createRow(content, styles = {}) {
-    const styleString = this.stylesToString(styles);
-    return `
-    <tr>
-      <td align="center" valign="top"${styleString ? ` style="${styleString}"` : ''}>
-        ${content}
-      </td>
-    </tr>`;
+  static createRow(content, styles = {}, tdStyles = {}) {
+    const tableStyle = this.stylesToString(styles);
+    const tdStyle = this.stylesToString(tdStyles);
+    return `<table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%"${tableStyle ? ` style="${tableStyle}"` : ''}>
+      <tr>
+        <td align="left" valign="top"${tdStyle ? ` style="${tdStyle}"` : ''}>
+          ${content}
+        </td>
+      </tr>
+    </table>`;
   }
 
   /**
-   * Create a multi-column row (for 2-column layouts)
+   * Create multi-column layouts using floating tables for Outlook stacking
    */
-  static createColumns(columns, styles = {}) {
-    const styleString = this.stylesToString(styles);
-    const columnWidth = Math.floor(100 / columns.length);
+  static createColumns(columnData, containerStyles = {}) {
+    const columnCount = columnData.length;
+    const widthPerColumn = Math.floor(100 / columnCount);
 
-    let columnsHtml = columns.map(column => `
-      <td width="${columnWidth}%" valign="top" class="mobile-stack" style="padding: 10px;">
-        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+    let html = `<!--[if (gte mso 9)|(IE)]><table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%"><tr><![endif]-->`;
+
+    columnData.forEach((colContent) => {
+      html += `
+      <!--[if (gte mso 9)|(IE)]><td valign="top" width="${widthPerColumn}%"><![endif]-->
+      <div class="stack-column" style="display: inline-block; width: 100%; max-width: ${widthPerColumn}%; vertical-align: top;">
+        <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
           <tr>
-            <td>
-              ${column}
+            <td style="padding: 10px;">
+              ${colContent}
             </td>
           </tr>
         </table>
-      </td>
-    `).join('');
+      </div>
+      <!--[if (gte mso 9)|(IE)]></td><![endif]-->`;
+    });
 
-    return `
-    <tr>
-      <td${styleString ? ` style="${styleString}"` : ''}>
-        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
-          <tr>
-            ${columnsHtml}
-          </tr>
-        </table>
-      </td>
-    </tr>`;
+    html += `<!--[if (gte mso 9)|(IE)]></tr></table><![endif]-->`;
+
+    return this.wrapInTable(html, containerStyles);
   }
 
   /**
-   * Create spacer for vertical spacing
-   */
-  static createSpacer(height = 20) {
-    return `
-    <tr>
-      <td height="${height}" style="font-size: ${height}px; line-height: ${height}px; mso-line-height-rule: exactly;">&nbsp;</td>
-    </tr>`;
-  }
-
-  /**
-   * Create an image element
+   * Create pixel-perfect image with Outlook width maintenance
    */
   static createImage(src, alt, width, height, styles = {}) {
-    const defaultStyles = {
-      border: '0',
+    const imageStyles = {
       display: 'block',
       width: width ? `${width}px` : '100%',
       height: height ? `${height}px` : 'auto',
-      'max-width': width ? `${width}px` : '100%',
+      'max-width': '100%',
+      border: '0',
+      'outline': 'none',
+      'text-decoration': 'none',
       ...styles
     };
-    const styleString = this.stylesToString(defaultStyles);
 
-    return `<img src="${src}" alt="${this.escapeHtml(alt)}" ${width ? `width="${width}"` : ''} ${height ? `height="${height}"` : ''} style="${styleString}" />`;
+    return `<img src="${src}" alt="${this.escapeHtml(alt)}" width="${width || '100%'}" height="${height || 'auto'}" style="${this.stylesToString(imageStyles)}" />`;
   }
 
   /**
-   * Create a button (email-safe with dynamic VML)
+   * Create production-grade VML button for Outlook + standard button
    */
   static createButton(text, href, styles = {}, dimensions = {}) {
     const { width = 200, height = 40 } = dimensions;
-    const defaultStyles = {
-      'background-color': '#007bff',
-      'color': '#ffffff',
-      'padding': '12px 24px',
-      'font-family': 'Arial, sans-serif',
-      'font-size': '16px',
-      'font-weight': 'bold',
-      'text-decoration': 'none',
-      'border-radius': '4px',
+    const bgColor = styles['background-color'] || '#007bff';
+    const textColor = styles['color'] || '#ffffff';
+    const fontSize = styles['font-size'] || '16px';
+    const borderRadius = parseInt(styles['border-radius'] || '4');
+    const arcsize = Math.round((borderRadius / height) * 100);
+
+    const buttonStyles = {
+      'background-color': bgColor,
+      'border-radius': `${borderRadius}px`,
+      'color': textColor,
       'display': 'inline-block',
-      'mso-padding-alt': '0',
+      'font-family': 'sans-serif',
+      'font-size': fontSize,
+      'font-weight': 'bold',
+      'line-height': `${height}px`,
+      'text-align': 'center',
+      'text-decoration': 'none',
+      'width': `${width}px`,
+      '-webkit-text-size-adjust': 'none',
+      'mso-hide': 'all',
       ...styles
     };
 
-    const bgColor = defaultStyles['background-color'];
-    const color = defaultStyles['color'];
-    const fontSize = defaultStyles['font-size'];
-    const borderRadius = parseInt(defaultStyles['border-radius']) || 4;
-    const arcSize = Math.round((borderRadius / height) * 100);
-
     return `
-    <!--[if mso]>
-    <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="${href}" style="height:${height}px;v-text-anchor:middle;width:${width}px;" arcsize="${arcSize}%" stroke="f" fillcolor="${bgColor}">
-      <w:anchorlock/>
-      <center style="color:${color};font-family:Arial,sans-serif;font-size:${fontSize};font-weight:bold;">${this.escapeHtml(text)}</center>
-    </v:roundrect>
-    <![endif]-->
-    <!--[if !mso]><!-->
-    <a href="${href}" target="_blank" style="${this.stylesToString(defaultStyles)}">${this.escapeHtml(text)}</a>
-    <!--<![endif]-->`;
+    <div>
+      <!--[if mso]>
+      <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="${href}" style="height:${height}px;v-text-anchor:middle;width:${width}px;" arcsize="${arcsize}%" stroke="f" fillcolor="${bgColor}">
+        <w:anchorlock/>
+        <center style="color:${textColor};font-family:sans-serif;font-size:${fontSize};font-weight:bold;">${this.escapeHtml(text)}</center>
+      </v:roundrect>
+      <![endif]-->
+      <a href="${href}" target="_blank" style="${this.stylesToString(buttonStyles)}">${this.escapeHtml(text)}</a>
+    </div>`;
   }
 
   /**
-   * Create text block
+   * Create text block with mso-line-height-rule
    */
   static createText(content, styles = {}) {
-    const defaultStyles = {
-      'font-family': 'Arial, Helvetica, sans-serif',
+    const textStyles = {
+      'font-family': 'sans-serif',
       'font-size': '16px',
-      'line-height': '1.5',
+      'line-height': '24px',
       'color': '#333333',
-      'margin': '0',
-      'padding': '0',
+      'mso-line-height-rule': 'exactly',
       ...styles
     };
-    const styleString = this.stylesToString(defaultStyles);
-
-    return `<div style="${styleString}">${content}</div>`;
+    return `<div style="${this.stylesToString(textStyles)}">${content}</div>`;
   }
 
   /**
    * Create heading
    */
   static createHeading(content, level = 1, styles = {}) {
-    const defaultStyles = {
-      'font-family': 'Arial, Helvetica, sans-serif',
-      'font-size': level === 1 ? '32px' : level === 2 ? '24px' : '20px',
+    const sizes = { 1: '32px', 2: '24px', 3: '20px' };
+    const headingStyles = {
+      'font-family': 'sans-serif',
+      'font-size': sizes[level] || '24px',
       'font-weight': 'bold',
       'line-height': '1.2',
-      'color': '#333333',
-      'margin': '0 0 10px 0',
-      'padding': '0',
+      'color': '#111111',
+      'margin': '0',
+      'mso-line-height-rule': 'exactly',
       ...styles
     };
-    const styleString = this.stylesToString(defaultStyles);
+    return `<div style="${this.stylesToString(headingStyles)}">${content}</div>`;
+  }
 
-    // Use div for headings to avoid Outlook default margins
-    return `<div style="${styleString}">${content}</div>`;
+  /**
+   * Vertical spacer
+   */
+  static createSpacer(height = 20) {
+    return `<table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr>
+        <td height="${height}" style="font-size: ${height}px; line-height: ${height}px; mso-line-height-rule: exactly;">&nbsp;</td>
+      </tr>
+    </table>`;
   }
 
   /**
@@ -256,27 +245,17 @@ export class EmailTableBuilder {
    */
   static escapeHtml(text) {
     if (!text) return '';
-    const map = {
-      '&': '&amp;',
-      '<': '&lt;',
-      '>': '&gt;',
-      '"': '&quot;',
-      "'": '&#039;'
-    };
+    const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
     return text.toString().replace(/[&<>"']/g, m => map[m]);
   }
 
   /**
-   * Build complete email from sections
+   * Assemble the final email
    */
-  static buildEmail(sections, containerBgColor = '#ffffff', outerBgColor = '#f4f4f4', width = 600) {
-    const content = this.createContainer(sections.join('\n'), containerBgColor, width);
-    const boilerplate = this.createBoilerplate();
-
-    return boilerplate
-      .replace('<!-- EMAIL CONTENT GOES HERE -->', content)
-      .replace('background-color: #f4f4f4', `background-color: ${outerBgColor}`)
-      .replace('class="dark-mode-bg" style="background-color: #f4f4f4;"', `class="dark-mode-bg" style="background-color: ${outerBgColor};"`);
+  static buildEmail(sections, bgColor = '#ffffff', outerBgColor = '#f4f4f4', width = 600) {
+    const boilerplate = this.createBoilerplate('Email Campaign', { backgroundColor: outerBgColor });
+    const content = sections.join('\n');
+    return boilerplate.replace('<!-- EMAIL CONTENT GOES HERE -->', content);
   }
 }
 
