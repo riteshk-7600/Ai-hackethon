@@ -150,6 +150,11 @@ class EmailGeneratorService {
         return `<!-- ${comp.type} component -->`;
     }
 
+    async generateBasicTemplate(options = {}) {
+        const analysis = await (await import('./email-vision.service.js')).default.getSeniorConversantRecovery();
+        return this.generateEmailHtml(analysis, options);
+    }
+
     normalizeStyles(s) {
         const map = { fontSize: 'font-size', fontWeight: 'font-weight', color: 'color', textAlign: 'text-align' };
         const result = {};
