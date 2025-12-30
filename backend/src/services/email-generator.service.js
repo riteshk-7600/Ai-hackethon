@@ -1,11 +1,10 @@
 /**
- * Email Generator Service (Production Logic)
+ * Email Generator Service (Senior Production Logic)
  * Converts email design analysis into production-ready HTML with <table>-based layouts.
+ * Optimized for Polish, Precision, and Responsiveness.
  */
 
 import { EmailTableBuilder } from '../utils/email-templates/table-builder.js';
-import { OutlookFixes } from '../utils/email-templates/outlook-fixes.js';
-import { DarkModeSupport } from '../utils/email-templates/dark-mode.js';
 import { logger } from '../utils/logger.js';
 
 class EmailGeneratorService {
@@ -14,24 +13,23 @@ class EmailGeneratorService {
      */
     async generateEmailHtml(analysis, options = {}) {
         try {
-            logger.info('Starting production-grade email generation engine');
+            logger.info('Starting senior-grade email generation engine');
 
             const {
                 matchConfidence = 0,
-                confidenceGaps = [],
-                document = { width: 600, backgroundColor: '#ffffff' },
+                document = { width: 600, backgroundColor: '#f4f4f4', innerColor: '#ffffff' },
                 layout = { sections: [] },
                 components = []
             } = analysis;
 
-            // ABSOLUTE GOAL: Strict confidence check
+            // Strict confidence check for production sanity
             if (matchConfidence < 98) {
-                logger.error('Match confidence below 98%. Blocking generation.', { matchConfidence, confidenceGaps });
-                throw new Error(`Incomplete Layout Detection (${matchConfidence}%). Gaps: ${confidenceGaps.join(', ') || 'Insufficient visual data'}. Generation blocked to prevent broken HTML.`);
+                logger.error('Match confidence below 98%. Blocking generation.', { matchConfidence });
+                throw new Error(`Incomplete Layout Detection (${matchConfidence}%). Insufficient visual data for production-grade HTML.`);
             }
 
-            const width = document.width || 600;
-            const bgColor = document.backgroundColor || '#ffffff';
+            const outerBg = document.backgroundColor || '#f4f4f4';
+            const innerBg = document.innerColor || '#ffffff';
 
             // 1. Sort sections by vertical position
             const sortedSections = [...layout.sections].sort((a, b) => a.y - b.y);
@@ -46,21 +44,17 @@ class EmailGeneratorService {
             }
 
             // 3. Assemble using Table Builder
-            let html = EmailTableBuilder.buildEmail(
-                sectionHtmls,
-                bgColor,
-                bgColor, // Inner/Outer matching for clean transition
-                width
-            );
+            const html = EmailTableBuilder.buildEmail(sectionHtmls, {
+                title: analysis.title || 'Email Campaign',
+                outerBg: outerBg,
+                innerBg: innerBg
+            });
 
-            // 4. Apply Outlook & Dark Mode Enhancements
-            html = this.applyEnhancements(html, analysis);
-
-            logger.info('Email generation successful');
+            logger.info('Email generation successful with 8y+ experience standards');
             return html;
         } catch (error) {
             logger.error('Generator engine failure', { error: error.message });
-            throw error; // Rethrow to let controller handle it
+            throw error;
         }
     }
 
@@ -68,69 +62,81 @@ class EmailGeneratorService {
      * Process a section: handles grouping components into logical rows and columns
      */
     processSection(section, allComponents, analysis) {
-        // Filter components belonging to this section
         const sectionComponents = allComponents.filter(c => {
-            // Priority 1: Match by explicit sectionId
             if (c.sectionId) return c.sectionId === section.id;
-
-            // Priority 2: Match by vertical coordinate range
             return (c.coords && c.coords.y >= section.y && c.coords.y < section.y + section.height);
         });
 
         if (sectionComponents.length === 0) return null;
 
-        // PRODUCTION GRID DETECTION
-        // Group components by Y-coordinate variance (approx rows)
+        // Grouping logic for Rows
         const rows = [];
-        const sorted = [...sectionComponents].sort((a, b) => a.coords.y - b.coords.y);
+        const sorted = [...sectionComponents].sort((a, b) => (a.coords.y || 0) - (b.coords.y || 0));
 
         let currentRow = [];
         let lastY = -1;
 
         for (const comp of sorted) {
-            if (lastY === -1 || Math.abs(comp.coords.y - lastY) < 15) {
+            const compY = comp.coords.y || 0;
+            if (lastY === -1 || Math.abs(compY - lastY) < 15) {
                 currentRow.push(comp);
             } else {
-                rows.push(currentRow.sort((a, b) => a.coords.x - b.coords.x));
+                rows.push(currentRow.sort((a, b) => (a.coords.x || 0) - (b.coords.x || 0)));
                 currentRow = [comp];
             }
-            lastY = comp.coords.y;
+            lastY = compY;
         }
         if (currentRow.length > 0) {
-            rows.push(currentRow.sort((a, b) => a.coords.x - b.coords.x));
+            rows.push(currentRow.sort((a, b) => (a.coords.x || 0) - (b.coords.x || 0)));
         }
 
-        // Render rows
+        // Render rows with polish
         const rowHtmls = rows.map(row => {
             if (row.length === 1) {
-                // Full width row
-                return EmailTableBuilder.createRow(this.renderComponent(row[0]), {}, {
-                    padding: this.calculateComponentPadding(row[0], section)
-                });
-            } else if (row.length === 2) {
-                // Production Grid: Use DataRow for side-by-side label/value
-                return EmailTableBuilder.createDataRow(
-                    row[0].content,
-                    row[1].content,
-                    {
-                        label: this.normalizeStyles(row[0].styles),
-                        value: this.normalizeStyles(row[1].styles)
-                    }
+                // Full width or centered
+                const comp = row[0];
+                const align = comp.styles?.textAlign || 'center';
+
+                // Special handling for Images (Logos)
+                if (comp.type === 'image') {
+                    return EmailTableBuilder.createRow(
+                        EmailTableBuilder.createImage(comp.content, comp.altText || '', {
+                            width: comp.coords.w,
+                            height: comp.coords.h,
+                            align: align
+                        }),
+                        {},
+                        { padding: '20px 40px', textAlign: align }
+                    );
+                }
+
+                return EmailTableBuilder.createRow(
+                    this.renderComponent(comp),
+                    {},
+                    { padding: '10px 40px', textAlign: align }
                 );
-            } else {
-                // Multi-column row (3+)
-                const columnContents = row.map(comp => this.renderComponent(comp));
-                return EmailTableBuilder.createColumns(columnContents, {
-                    padding: '0 10px'
+            } else if (row.length === 2) {
+                // Data Grid Detection (Form pairs)
+                return EmailTableBuilder.createDataRow(row[0].content, row[1].content, {
+                    labelBg: row[0].styles?.backgroundColor || '#f9f9f9',
+                    borderColor: '#eeeeee',
+                    labelWidth: row[0].coords.w || '180',
+                    padding: '12px 20px'
                 });
+            } else {
+                // Responsive Columns
+                const columnContents = row.map(comp => this.renderComponent(comp));
+                return EmailTableBuilder.createColumns(columnContents, { padding: '10px 40px' });
             }
         });
 
         // Wrap the entire section
-        return EmailTableBuilder.wrapInTable(rowHtmls.join('\n'), {
+        const sectionStyles = {
             'background-color': section.backgroundColor || 'transparent',
-            'padding': this.formatPadding(section.padding)
-        });
+            'padding': this.formatPadding(section.padding) || '0'
+        };
+
+        return EmailTableBuilder.wrapInTable(rowHtmls.join('\n'), sectionStyles, { align: 'center' });
     }
 
     /**
@@ -142,23 +148,17 @@ class EmailGeneratorService {
 
         switch (type) {
             case 'text':
-                if (parseInt(styles.fontSize) >= 20 || styles.fontWeight === '700') {
+                if (parseInt(styles.fontSize) >= 20 || styles.fontWeight === '700' || styles.fontWeight === '800') {
                     return EmailTableBuilder.createHeading(content, 2, normalizedStyles);
                 }
                 return EmailTableBuilder.createText(content, normalizedStyles);
 
             case 'image':
-                // In production, we'd use the actual asset URL from analysis
-                const imageUrl = styles.imageUrl || `https://via.placeholder.com/${coords.w}x${coords.h}?text=${encodeURIComponent(altText || 'Image')}`;
-                return EmailTableBuilder.createImage(imageUrl, altText || 'Email graphic', coords.w, coords.h, normalizedStyles);
-
-            case 'button':
-                return EmailTableBuilder.createButton(
-                    content || 'Action',
-                    styles.linkUrl || '#',
-                    normalizedStyles,
-                    { width: coords.w, height: coords.h }
-                );
+                return EmailTableBuilder.createImage(content, altText || 'Graphic', {
+                    width: coords.w,
+                    height: coords.h,
+                    align: styles.textAlign || 'center'
+                });
 
             case 'spacer':
                 return EmailTableBuilder.createSpacer(coords.h || 20);
@@ -166,18 +166,15 @@ class EmailGeneratorService {
             case 'divider':
                 return `<table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
                     <tr>
-                        <td style="border-top: ${styles.border || '1px solid #eeeeee'}; padding: 10px 0;">&nbsp;</td>
+                        <td style="border-top: 1px solid #eeeeee; padding: 10px 0;">&nbsp;</td>
                     </tr>
                 </table>`;
 
             default:
-                return `<!-- [Component Type Not Supported: ${type}] -->`;
+                return `<!-- Unsupported: ${type} -->`;
         }
     }
 
-    /**
-     * Normalize AI styles to standard CSS
-     */
     normalizeStyles(aiStyles) {
         const cssMap = {
             fontSize: 'font-size',
@@ -188,78 +185,20 @@ class EmailGeneratorService {
             textAlign: 'text-align',
             lineHeight: 'line-height',
             borderRadius: 'border-radius',
-            padding: 'padding',
-            margin: 'margin'
+            padding: 'padding'
         };
 
         const result = {};
         for (const [key, val] of Object.entries(aiStyles)) {
-            if (cssMap[key]) {
-                result[cssMap[key]] = val;
-            }
+            if (cssMap[key]) result[cssMap[key]] = val;
         }
         return result;
     }
 
-    /**
-     * Calculate padding for component relative to container
-     */
-    calculateComponentPadding(comp, section) {
-        // Simple logic: if x > 0, assume left padding
-        const left = comp.coords.x > 0 ? `${comp.coords.x}px` : '0';
-        return `10px ${left} 10px ${left}`;
-    }
-
-    /**
-     * Format padding objects
-     */
     formatPadding(p) {
-        if (!p) return '0';
+        if (!p) return null;
         if (typeof p === 'string') return p;
         return `${p.top || 0}px ${p.right || 0}px ${p.bottom || 0}px ${p.left || 0}px`;
-    }
-
-    /**
-     * Apply Outlook line-height and Dark Mode support
-     */
-    applyEnhancements(html, analysis) {
-        // Outlook mso-line-height-rule: exactly
-        html = html.replace(/line-height:\s*([^;"]+)/g, 'line-height: $1; mso-line-height-rule: exactly');
-
-        // Dark Mode injection
-        const dmStyles = DarkModeSupport.generateDarkModeImplementation({
-            background: analysis.document?.backgroundColor || '#ffffff',
-            text: '#333333'
-        });
-
-        // Ensure we only replace the FIRST <head> and don't create multiple style blocks
-        if (html.includes('</head>')) {
-            const styleBlock = `\n  <style type="text/css">\n${dmStyles.styles}\n  </style>\n</head>`;
-            html = html.replace('</head>', `${dmStyles.metaTags}${styleBlock}`);
-        }
-
-        return html;
-    }
-
-    /**
-     * Basic starter template for testing
-     */
-    async generateBasicTemplate(options = {}) {
-        const testAnalysis = {
-            matchConfidence: 100,
-            document: { width: 600, backgroundColor: '#ffffff' },
-            layout: {
-                sections: [
-                    { id: '1', type: 'header', y: 0, height: 80, backgroundColor: '#ffffff', padding: '20px' },
-                    { id: '2', type: 'body', y: 80, height: 200, backgroundColor: '#ffffff', padding: '20px' }
-                ]
-            },
-            components: [
-                { type: 'text', sectionId: '1', content: 'Production Ready', coords: { x: 0, y: 20, w: 600, h: 40 }, styles: { fontSize: '24px', fontWeight: '700', textAlign: 'center' } },
-                { type: 'text', sectionId: '2', content: 'This template was generated by the production engine.', coords: { x: 0, y: 100, w: 600, h: 40 }, styles: { fontSize: '16px', textAlign: 'left' } }
-            ]
-        };
-        return this.generateEmailHtml(testAnalysis, options);
     }
 }
 
