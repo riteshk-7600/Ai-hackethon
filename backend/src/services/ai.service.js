@@ -60,17 +60,22 @@ export class AIService {
             // Prefer Gemini for High-Fidelity Vision if available
             if (process.env.GEMINI_API_KEY) {
                 const model = this.genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
-                const result = await model.generateContent([
-                    prompt,
-                    {
-                        inlineData: {
-                            data: base64Image,
-                            mimeType: "image/png"
+                try {
+                    const result = await model.generateContent([
+                        prompt,
+                        {
+                            inlineData: {
+                                data: base64Image,
+                                mimeType: "image/png"
+                            }
                         }
-                    }
-                ]);
-                const response = await result.response;
-                return response.text();
+                    ]);
+                    const response = await result.response;
+                    return response.text();
+                } catch (geminiError) {
+                    logger.warn('Gemini vision failed, falling back if possible:', geminiError.message);
+                    if (!process.env.OPENAI_API_KEY && !process.env.ANTHROPIC_API_KEY) throw geminiError;
+                }
             }
 
             if (this.provider === 'openai' && this.openai) {
