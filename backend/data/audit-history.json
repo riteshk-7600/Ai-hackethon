@@ -1,5 +1,65 @@
 [
   {
+    "id": 1767271629991,
+    "date": "2026-01-01T12:47:09.991Z",
+    "url": "Email Template (Auto-Fix)",
+    "type": "Newsletter Fix",
+    "score": 100,
+    "status": "pass",
+    "issuesFound": 4,
+    "criticalIssues": 0
+  },
+  {
+    "id": 1767271608405,
+    "date": "2026-01-01T12:46:48.405Z",
+    "url": "Email Template",
+    "type": "Newsletter",
+    "score": 0,
+    "status": "fail",
+    "issuesFound": 30,
+    "criticalIssues": 26
+  },
+  {
+    "id": 1767271516385,
+    "date": "2026-01-01T12:45:16.385Z",
+    "url": "Source Code Documentation",
+    "type": "Documentation",
+    "score": 100,
+    "status": "pass",
+    "issuesFound": 30,
+    "criticalIssues": 0
+  },
+  {
+    "id": 1767271459866,
+    "date": "2026-01-01T12:44:19.866Z",
+    "url": "https://rivuletiq.com",
+    "type": "Website Audit",
+    "score": 0,
+    "status": "fail",
+    "issuesFound": 315,
+    "criticalIssues": 254
+  },
+  {
+    "id": 1767271329505,
+    "date": "2026-01-01T12:42:09.505Z",
+    "url": "https://rivuletiq.com",
+    "type": "PageSpeed",
+    "score": 42,
+    "status": "error",
+    "issuesFound": 9,
+    "criticalIssues": 7
+  },
+  {
+    "id": 1767271254107,
+    "date": "2026-01-01T12:40:54.107Z",
+    "url": "Batch Image Session",
+    "type": "Image Optimization",
+    "score": 94.22,
+    "status": "pass",
+    "issuesFound": 1,
+    "criticalIssues": 0
+  },
+  {
     "id": 1767018376894,
     "date": "2025-12-29T14:26:16.894Z",
     "url": "https://www.rivuletiq.com/",
