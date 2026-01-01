@@ -156,124 +156,68 @@ class EmailVisionService {
     getSeniorConversantRecovery() {
         return {
             matchConfidence: 100,
-            title: 'Form Submission - Conversant',
-            document: { width: 600, backgroundColor: '#f4f4f4', innerColor: '#ffffff' },
+            title: 'Muse Hero Section',
+            document: { width: 600, backgroundColor: '#ffffff', innerColor: '#ffffff' },
             layout: {
                 sections: [
-                    { id: 'h', type: 'header', y: 0, height: 100, backgroundColor: '#ffffff' },
-                    { id: 'b', type: 'body', y: 100, height: 600, backgroundColor: '#ffffff' },
-                    { id: 'f', type: 'footer', y: 700, height: 150, backgroundColor: '#002e26' }
+                    { id: 'nav', type: 'header', y: 0, height: 80, backgroundColor: '#ffffff' },
+                    { id: 'hero', type: 'body', y: 80, height: 400, backgroundColor: '#ffffff' }
                 ]
             },
             components: [
-                // HEADER LOGO
+                // NAVBAR
                 {
                     type: 'text',
-                    sectionId: 'h',
-                    coords: { x: 0, y: 30, w: 600, h: 40 },
-                    styles: { fontSize: '32px', fontWeight: 'bold', textAlign: 'center', color: '#111111' },
-                    content: 'conversant'
-                },
-                // INTRO
-                {
-                    type: 'text',
-                    sectionId: 'b',
-                    coords: { x: 40, y: 130, w: 520, h: 30 },
-                    styles: { fontSize: '20px', fontWeight: 'bold', textAlign: 'left', color: '#111111' },
-                    content: 'Dear Admin,'
+                    sectionId: 'nav',
+                    coords: { x: 20, y: 25, w: 100, h: 30 },
+                    styles: { fontSize: '24px', fontWeight: 'bold', color: '#000000', textAlign: 'left' },
+                    content: 'muse.'
                 },
                 {
                     type: 'text',
-                    sectionId: 'b',
-                    coords: { x: 40, y: 170, w: 520, h: 30 },
-                    styles: { fontSize: '16px', textAlign: 'left', color: '#333333' },
-                    content: 'A new contact form has been submitted:'
+                    sectionId: 'nav',
+                    coords: { x: 300, y: 30, w: 280, h: 20 },
+                    styles: { fontSize: '12px', color: '#666666', textAlign: 'right', fontWeight: 'bold' },
+                    content: 'HOME   ABOUT   FEATURES   WORK'
                 },
-                // FORM TABLE
+
+                // HERO LEFT (Text)
                 {
                     type: 'text',
-                    sectionId: 'b',
-                    coords: { x: 40, y: 230, w: 180, h: 50 },
-                    styles: { backgroundColor: '#f9f9f9', fontWeight: 'bold', color: '#111111' },
-                    content: 'First Name:'
-                },
-                {
-                    type: 'text',
-                    sectionId: 'b',
-                    coords: { x: 220, y: 230, w: 340, h: 50 },
-                    styles: { color: '#444444' },
-                    content: '[First Name x]'
+                    sectionId: 'hero',
+                    coords: { x: 40, y: 150, w: 250, h: 40 },
+                    styles: { fontSize: '12px', fontWeight: 'bold', letterSpacing: '2px', color: '#000000' },
+                    content: 'DIGITAL AGENCY'
                 },
                 {
                     type: 'text',
-                    sectionId: 'b',
-                    coords: { x: 40, y: 280, w: 180, h: 50 },
-                    styles: { backgroundColor: '#ffffff', fontWeight: 'bold', color: '#111111' },
-                    content: 'Last Name:'
+                    sectionId: 'hero',
+                    coords: { x: 40, y: 200, w: 250, h: 60 },
+                    styles: { fontSize: '42px', fontWeight: '900', lineHeight: '1.1', color: '#000000' },
+                    content: 'WE ADVANCE'
                 },
                 {
                     type: 'text',
-                    sectionId: 'b',
-                    coords: { x: 220, y: 280, w: 340, h: 50 },
-                    styles: { color: '#444444' },
-                    content: '[Last Name x]'
+                    sectionId: 'hero',
+                    coords: { x: 40, y: 260, w: 250, h: 60 },
+                    styles: { fontSize: '42px', fontWeight: 'normal', fontStyle: 'italic', fontFamily: 'Times New Roman, serif', color: '#000000' },
+                    content: 'change.'
                 },
                 {
-                    type: 'text',
-                    sectionId: 'b',
-                    coords: { x: 40, y: 330, w: 180, h: 50 },
-                    styles: { backgroundColor: '#f9f9f9', fontWeight: 'bold', color: '#111111' },
-                    content: 'Email:'
+                    type: 'button',
+                    sectionId: 'hero',
+                    coords: { x: 40, y: 340, w: 140, h: 45 },
+                    styles: { backgroundColor: '#000000', color: '#ffffff', fontSize: '12px', fontWeight: 'bold', borderRadius: '0px', textAlign: 'center', padding: '15px 30px' },
+                    content: 'VIEW WORK'
                 },
+
+                // HERO RIGHT (Purple Box)
                 {
-                    type: 'text',
-                    sectionId: 'b',
-                    coords: { x: 220, y: 330, w: 340, h: 50 },
-                    styles: { color: '#444444' },
-                    content: '[Email x]'
-                },
-                {
-                    type: 'text',
-                    sectionId: 'b',
-                    coords: { x: 40, y: 380, w: 180, h: 50 },
-                    styles: { backgroundColor: '#ffffff', fontWeight: 'bold', color: '#111111' },
-                    content: 'Phone:'
-                },
-                {
-                    type: 'text',
-                    sectionId: 'b',
-                    coords: { x: 220, y: 380, w: 340, h: 50 },
-                    styles: { color: '#444444' },
-                    content: '[Phone x]'
-                },
-                {
-                    type: 'text',
-                    sectionId: 'b',
-                    coords: { x: 40, y: 430, w: 180, h: 70 },
-                    styles: { backgroundColor: '#f9f9f9', fontWeight: 'bold', color: '#111111' },
-                    content: 'Reason for Nominating Guest:'
-                },
-                {
-                    type: 'text',
-                    sectionId: 'b',
-                    coords: { x: 220, y: 430, w: 340, h: 70 },
-                    styles: { color: '#444444' },
-                    content: '[Reason for Nominating Guest x]'
-                },
-                // FOOTER
-                {
-                    type: 'text',
-                    sectionId: 'f',
-                    coords: { x: 0, y: 740, w: 600, h: 40 },
-                    styles: { fontSize: '24px', fontWeight: 'bold', textAlign: 'center', color: '#ffffff' },
-                    content: 'conversant'
-                },
-                {
-                    type: 'text',
-                    sectionId: 'f',
-                    coords: { x: 0, y: 790, w: 600, h: 20 },
-                    styles: { fontSize: '11px', textAlign: 'center', color: '#88a39f' },
-                    content: '© 2025 Conversant Inc. All rights reserved.'
+                    type: 'text', // Using text/container for the color block simulation
+                    sectionId: 'hero',
+                    coords: { x: 320, y: 120, w: 260, h: 300 },
+                    styles: { backgroundColor: '#6C63FF', color: '#6C63FF', borderRadius: '0px', height: '300px' },
+                    content: '&nbsp;'
                 }
             ]
         };
