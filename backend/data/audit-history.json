@@ -1,5 +1,35 @@
 [
   {
+    "id": 1767273363043,
+    "date": "2026-01-01T13:16:03.043Z",
+    "url": "https://www.huebnermarketing.com/ vs https://huebnermarkstg.wpenginepowered.com/",
+    "type": "Advanced Comparison",
+    "score": 92,
+    "status": "pass",
+    "issuesFound": 8,
+    "criticalIssues": 0
+  },
+  {
+    "id": 1767273362950,
+    "date": "2026-01-01T13:16:02.950Z",
+    "url": "https://huebnermarkstg.wpenginepowered.com/",
+    "type": "Website Audit",
+    "score": 84,
+    "status": "error",
+    "issuesFound": 8,
+    "criticalIssues": 8
+  },
+  {
+    "id": 1767273183486,
+    "date": "2026-01-01T13:13:03.486Z",
+    "url": "Batch Image Session",
+    "type": "Image Optimization",
+    "score": 96.46,
+    "status": "pass",
+    "issuesFound": 1,
+    "criticalIssues": 0
+  },
+  {
     "id": 1767271629991,
     "date": "2026-01-01T12:47:09.991Z",
     "url": "Email Template (Auto-Fix)",

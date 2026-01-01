@@ -1,38 +1,32 @@
 {
     "version": 2,
-    "builds": [
-        {
-            "src": "backend/src/server.js",
-            "use": "@vercel/node"
-        },
-        {
-            "src": "frontend/package.json",
-            "use": "@vercel/static-build",
-            "config": {
-                "distDir": "dist"
-            }
-        }
-    ],
+    "framework": "vite",
     "rewrites": [
         {
             "source": "/api/(.*)",
-            "destination": "backend/src/server.js"
+            "destination": "/api/index.js"
         },
         {
             "source": "/uploads/(.*)",
-            "destination": "backend/src/server.js"
+            "destination": "/api/index.js"
         },
         {
             "source": "/downloads/(.*)",
-            "destination": "backend/src/server.js"
+            "destination": "/api/index.js"
         },
         {
             "source": "/health",
-            "destination": "backend/src/server.js"
+            "destination": "/api/index.js"
         },
         {
             "source": "/(.*)",
             "destination": "/index.html"
         }
-    ]
+    ],
+    "functions": {
+        "api/index.js": {
+            "maxDuration": 60,
+            "memory": 3008
+        }
+    }
 }
