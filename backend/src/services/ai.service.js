@@ -51,31 +51,45 @@ export class AIService {
     }
 
     async analyzeImageWithVision(base64Image, prompt) {
-        if (!this.enabled && !process.env.GEMINI_API_KEY && !process.env.OPENAI_API_KEY) {
-            logger.warn('AI vision analysis requested but AI is disabled')
+        if (!process.env.GEMINI_API_KEY && !process.env.OPENAI_API_KEY) {
+            logger.warn('AI vision analysis requested but no API keys configured')
             return 'AI vision analysis not available - API key not configured'
         }
 
         try {
             // Prefer Gemini for High-Fidelity Vision if available
             if (process.env.GEMINI_API_KEY) {
-                const model = this.genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-                try {
-                    const result = await model.generateContent([
-                        prompt,
-                        {
-                            inlineData: {
-                                data: base64Image,
-                                mimeType: "image/png"
+                // Lazy-initialize if needed (handles cases where .env was loaded after class instantiation)
+                if (!this.genAI) {
+                    try {
+                        this.genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY)
+                        this.enabled = true
+                        logger.info('Google Gemini service lazily initialized')
+                    } catch (err) {
+                        logger.error('Gemini lazy initialization failed:', err.message)
+                    }
+                }
+
+                if (this.genAI) {
+                    logger.info('Using Gemini Flash (Latest) for vision analysis');
+                    const model = this.genAI.getGenerativeModel({ model: "gemini-flash-latest" });
+                    try {
+                        const result = await model.generateContent([
+                            prompt,
+                            {
+                                inlineData: {
+                                    data: base64Image,
+                                    mimeType: "image/png"
+                                }
                             }
-                        }
-                    ]);
-                    const response = await result.response;
-                    return response.text();
-                } catch (geminiError) {
-                    logger.warn('Gemini vision failed, attempting fallback...', geminiError.message);
-                    // If no other keys, throw. If others exist, swallow and let flow continue to OpenAI/Anthropic
-                    if (!process.env.OPENAI_API_KEY && !process.env.ANTHROPIC_API_KEY) throw geminiError;
+                        ]);
+                        const response = await result.response;
+                        return response.text();
+                    } catch (geminiError) {
+                        logger.warn('Gemini vision failed:', geminiError.message);
+                        // If no other keys, throw. If others exist, swallow and let flow continue to OpenAI/Anthropic
+                        if (!process.env.OPENAI_API_KEY && !process.env.ANTHROPIC_API_KEY) throw geminiError;
+                    }
                 }
             }
 

@@ -1,5 +1,315 @@
 [
   {
+    "id": 1767342126110,
+    "date": "2026-01-02T08:22:06.110Z",
+    "url": "Email Template",
+    "type": "Newsletter",
+    "score": 0,
+    "status": "fail",
+    "issuesFound": 28,
+    "criticalIssues": 27
+  },
+  {
+    "id": 1767342100705,
+    "date": "2026-01-02T08:21:40.705Z",
+    "url": "Email Template (Auto-Fix)",
+    "type": "Newsletter Fix",
+    "score": 100,
+    "status": "pass",
+    "issuesFound": 10,
+    "criticalIssues": 0
+  },
+  {
+    "id": 1767342082357,
+    "date": "2026-01-02T08:21:22.357Z",
+    "url": "Email Template",
+    "type": "Newsletter",
+    "score": 0,
+    "status": "fail",
+    "issuesFound": 30,
+    "criticalIssues": 26
+  },
+  {
+    "id": 1767341989240,
+    "date": "2026-01-02T08:19:49.240Z",
+    "url": "Source Code Documentation",
+    "type": "Documentation",
+    "score": 100,
+    "status": "pass",
+    "issuesFound": 30,
+    "criticalIssues": 0
+  },
+  {
+    "id": 1767341801064,
+    "date": "2026-01-02T08:16:41.064Z",
+    "url": "Batch Image Session",
+    "type": "Image Optimization",
+    "score": 99.06,
+    "status": "pass",
+    "issuesFound": 2,
+    "criticalIssues": 0
+  },
+  {
+    "id": 1767341715092,
+    "date": "2026-01-02T08:15:15.092Z",
+    "url": "https://www.rivuletiq.com/",
+    "type": "Website Audit",
+    "score": 0,
+    "status": "fail",
+    "issuesFound": 319,
+    "criticalIssues": 255
+  },
+  {
+    "id": 1767340585820,
+    "date": "2026-01-02T07:56:25.820Z",
+    "url": "Batch Image Session",
+    "type": "Image Optimization",
+    "score": 98.36,
+    "status": "pass",
+    "issuesFound": 6,
+    "criticalIssues": 0
+  },
+  {
+    "id": 1767340542846,
+    "date": "2026-01-02T07:55:42.846Z",
+    "url": "Batch Image Session",
+    "type": "Image Optimization",
+    "score": 99.09,
+    "status": "pass",
+    "issuesFound": 1,
+    "criticalIssues": 0
+  },
+  {
+    "id": 1767334975030,
+    "date": "2026-01-02T06:22:55.030Z",
+    "url": "Email Template",
+    "type": "Newsletter",
+    "score": 0,
+    "status": "fail",
+    "issuesFound": 28,
+    "criticalIssues": 27
+  },
+  {
+    "id": 1767334956692,
+    "date": "2026-01-02T06:22:36.692Z",
+    "url": "Email Template (Auto-Fix)",
+    "type": "Newsletter Fix",
+    "score": 100,
+    "status": "pass",
+    "issuesFound": 2,
+    "criticalIssues": 0
+  },
+  {
+    "id": 1767334945289,
+    "date": "2026-01-02T06:22:25.289Z",
+    "url": "Email Template",
+    "type": "Newsletter",
+    "score": 0,
+    "status": "fail",
+    "issuesFound": 28,
+    "criticalIssues": 27
+  },
+  {
+    "id": 1767334930112,
+    "date": "2026-01-02T06:22:10.112Z",
+    "url": "Email Template",
+    "type": "Newsletter",
+    "score": 0,
+    "status": "fail",
+    "issuesFound": 28,
+    "criticalIssues": 27
+  },
+  {
+    "id": 1767334914209,
+    "date": "2026-01-02T06:21:54.209Z",
+    "url": "Email Template (Auto-Fix)",
+    "type": "Newsletter Fix",
+    "score": 100,
+    "status": "pass",
+    "issuesFound": 2,
+    "criticalIssues": 0
+  },
+  {
+    "id": 1767334888062,
+    "date": "2026-01-02T06:21:28.062Z",
+    "url": "Email Template",
+    "type": "Newsletter",
+    "score": 0,
+    "status": "fail",
+    "issuesFound": 28,
+    "criticalIssues": 27
+  },
+  {
+    "id": 1767334875439,
+    "date": "2026-01-02T06:21:15.439Z",
+    "url": "Email Template (Auto-Fix)",
+    "type": "Newsletter Fix",
+    "score": 100,
+    "status": "pass",
+    "issuesFound": 6,
+    "criticalIssues": 0
+  },
+  {
+    "id": 1767334829142,
+    "date": "2026-01-02T06:20:29.142Z",
+    "url": "Email Template",
+    "type": "Newsletter",
+    "score": 0,
+    "status": "fail",
+    "issuesFound": 30,
+    "criticalIssues": 26
+  },
+  {
+    "id": 1767334697687,
+    "date": "2026-01-02T06:18:17.687Z",
+    "url": "Source Code Documentation",
+    "type": "Documentation",
+    "score": 100,
+    "status": "pass",
+    "issuesFound": 30,
+    "criticalIssues": 0
+  },
+  {
+    "id": 1767334560280,
+    "date": "2026-01-02T06:16:00.280Z",
+    "url": "https://www.rivuletiq.com/",
+    "type": "PageSpeed",
+    "score": 49,
+    "status": "error",
+    "issuesFound": 8,
+    "criticalIssues": 7
+  },
+  {
+    "id": 1767334430842,
+    "date": "2026-01-02T06:13:50.842Z",
+    "url": "Batch Image Session",
+    "type": "Image Optimization",
+    "score": 91.41,
+    "status": "pass",
+    "issuesFound": 1,
+    "criticalIssues": 0
+  },
+  {
+    "id": 1767334185863,
+    "date": "2026-01-02T06:09:45.863Z",
+    "url": "https://huebnermarketing.com",
+    "type": "Website Audit",
+    "score": 0,
+    "status": "fail",
+    "issuesFound": 829,
+    "criticalIssues": 752
+  },
+  {
+    "id": 1767333922078,
+    "date": "2026-01-02T06:05:22.078Z",
+    "url": "https://huebnermarketing.com",
+    "type": "Website Audit",
+    "score": 0,
+    "status": "fail",
+    "issuesFound": 829,
+    "criticalIssues": 752
+  },
+  {
+    "id": 1767333617990,
+    "date": "2026-01-02T06:00:17.990Z",
+    "url": "https://huebnermarketing.com",
+    "type": "Website Audit",
+    "score": 0,
+    "status": "fail",
+    "issuesFound": 829,
+    "criticalIssues": 752
+  },
+  {
+    "id": 1767333561566,
+    "date": "2026-01-02T05:59:21.566Z",
+    "url": "https://google.com",
+    "type": "Website Audit",
+    "score": 0,
+    "status": "fail",
+    "issuesFound": 78,
+    "criticalIssues": 68
+  },
+  {
+    "id": 1767333450658,
+    "date": "2026-01-02T05:57:30.658Z",
+    "url": "https://huebnermarketing.com",
+    "type": "Website Audit",
+    "score": 0,
+    "status": "fail",
+    "issuesFound": 829,
+    "criticalIssues": 752
+  },
+  {
+    "id": 1767333409700,
+    "date": "2026-01-02T05:56:49.700Z",
+    "url": "https://example.com",
+    "type": "Website Audit",
+    "score": 7,
+    "status": "fail",
+    "issuesFound": 7,
+    "criticalIssues": 6
+  },
+  {
+    "id": 1767333264997,
+    "date": "2026-01-02T05:54:24.997Z",
+    "url": "https://example.com",
+    "type": "Website Audit",
+    "score": 7,
+    "status": "fail",
+    "issuesFound": 7,
+    "criticalIssues": 6
+  },
+  {
+    "id": 1767332710146,
+    "date": "2026-01-02T05:45:10.146Z",
+    "url": "https://www.huebnermarketing.com/ vs https://huebnermarkstg.wpenginepowered.com/",
+    "type": "Advanced Comparison",
+    "score": 92,
+    "status": "pass",
+    "issuesFound": 8,
+    "criticalIssues": 0
+  },
+  {
+    "id": 1767332710050,
+    "date": "2026-01-02T05:45:10.050Z",
+    "url": "https://huebnermarkstg.wpenginepowered.com/",
+    "type": "Website Audit",
+    "score": 84,
+    "status": "error",
+    "issuesFound": 8,
+    "criticalIssues": 8
+  },
+  {
+    "id": 1767332538698,
+    "date": "2026-01-02T05:42:18.698Z",
+    "url": "Source Code Documentation",
+    "type": "Documentation",
+    "score": 100,
+    "status": "pass",
+    "issuesFound": 30,
+    "criticalIssues": 0
+  },
+  {
+    "id": 1767276901221,
+    "date": "2026-01-01T14:15:01.221Z",
+    "url": "https://www.rivuletiq.com/",
+    "type": "PageSpeed",
+    "score": 39,
+    "status": "error",
+    "issuesFound": 8,
+    "criticalIssues": 7
+  },
+  {
+    "id": 1767276814304,
+    "date": "2026-01-01T14:13:34.304Z",
+    "url": "Batch Image Session",
+    "type": "Image Optimization",
+    "score": 97.89,
+    "status": "pass",
+    "issuesFound": 1,
+    "criticalIssues": 0
+  },
+  {
     "id": 1767273363043,
     "date": "2026-01-01T13:16:03.043Z",
     "url": "https://www.huebnermarketing.com/ vs https://huebnermarkstg.wpenginepowered.com/",

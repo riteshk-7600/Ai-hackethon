@@ -75,15 +75,18 @@ export async function auditWebsite(req, res) {
         await page.setViewport({ width: 1920, height: 1080 })
         await page.setContent(crawlData.html)
 
+        let screenshotCount = 0
+        const MAX_ISSUE_SCREENSHOTS = 15
+
         for (const issue of allIssues) {
             if (issue.severity === 'critical' || issue.severity === 'warning') {
                 try {
-                    if (issue.coordinates) {
+                    if (issue.coordinates && screenshotCount < MAX_ISSUE_SCREENSHOTS) {
                         const { x, y, width, height } = issue.coordinates
                         const clipX = Math.max(0, x - 50)
                         const clipY = Math.max(0, y - 50)
                         const clipWidth = Math.min(1920 - clipX, width + 100)
-                        const clipHeight = Math.min(height + 100, 1080) // Rough cap for issue preview
+                        const clipHeight = Math.min(height + 100, 1080)
 
                         const issueBuffer = await page.screenshot({
                             clip: { x: clipX, y: clipY, width: clipWidth, height: clipHeight },
@@ -91,6 +94,7 @@ export async function auditWebsite(req, res) {
                         })
                         const issuePath = await storageService.saveScreenshot(`ux-issue-${timestamp}-${Math.random().toString(36).substr(2, 5)}.png`, issueBuffer)
                         issue.screenshotUrl = issuePath
+                        screenshotCount++
                     }
 
                     if (aiService.isEnabled() && issue.severity === 'critical') {

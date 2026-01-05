@@ -1,8 +1,10 @@
+import dotenv from 'dotenv'
+dotenv.config()
+
 import express from 'express'
 import path from 'path'
 import cors from 'cors'
 import helmet from 'helmet'
-import dotenv from 'dotenv'
 import rateLimit from 'express-rate-limit'
 import auditRoutes from './routes/audit.routes.js'
 import authRoutes from './routes/auth.routes.js'
@@ -10,8 +12,6 @@ import pagespeedRoutes from './routes/pagespeed.routes.js'
 import emailRoutes from './routes/email.routes.js'
 import { authenticate } from './middleware/auth.middleware.js'
 import { logger } from './utils/logger.js'
-
-dotenv.config()
 
 const app = express()
 const PORT = process.env.PORT || 5000

@@ -119,7 +119,7 @@ export class CrawlerService {
                 if (rect.width > 0 && rect.height > 0) {
                     elements.push({
                         tag: el.tagName.toLowerCase(),
-                        selector: el.className ? `.${el.className.split(' ').join('.')}` : el.tagName.toLowerCase(),
+                        selector: (typeof el.className === 'string' && el.className.trim()) ? `.${el.className.trim().split(/\s+/).join('.')}` : el.tagName.toLowerCase(),
                         id: el.id || null,
 
                         // Position and size

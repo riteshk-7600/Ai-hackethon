@@ -188,6 +188,50 @@ export class EmailTableBuilder {
     </table>`;
   }
 
+  /**
+   * Create an image element with responsive support
+   */
+  static createImage(src, alt = '', styles = {}) {
+    const {
+      width = '100%',
+      maxWidth = '600',
+      height = 'auto',
+      align = 'center',
+      padding = '0'
+    } = styles;
+
+    return `<table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr>
+        <td align="${align}" style="padding: ${padding};">
+          <img src="${src}" alt="${this.escapeHtml(alt)}" width="${width}" height="${height}" style="display: block; width: ${width}; max-width: ${maxWidth}px; height: ${height}; border: 0; outline: none; text-decoration: none; -ms-interpolation-mode: bicubic;" />
+        </td>
+      </tr>
+    </table>`;
+  }
+
+  /**
+   * Create multi-column layout (stacks on mobile)
+   */
+  static createColumns(columns, options = {}) {
+    const { padding = '10px 20px', gap = '0' } = options;
+    const columnCount = columns.length;
+    const columnWidth = columnCount === 2 ? '50%' : Math.floor(100 / columnCount) + '%';
+
+    const columnsHtml = columns.map(col => `
+      <!--[if (gte mso 9)|(IE)]><td width="${Math.floor(600 / columnCount)}" valign="top"><![endif]-->
+      <td class="stack-column" align="left" valign="top" width="${columnWidth}" style="padding: ${padding};">
+        ${col}
+      </td>
+      <!--[if (gte mso 9)|(IE)]></td><![endif]-->
+    `).join('');
+
+    return `<table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr>
+        ${columnsHtml}
+      </tr>
+    </table>`;
+  }
+
   static createDivider(color = '#eeeeee', height = '1px', margin = '20px 0') {
     return `<table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
       <tr>

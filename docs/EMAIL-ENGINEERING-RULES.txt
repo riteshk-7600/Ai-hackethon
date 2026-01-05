@@ -1,0 +1,208 @@
+╔══════════════════════════════════════════════════════════════════════╗
+║                  EMAIL ENGINEERING QUICK REFERENCE                   ║
+║                  (10+ Years Professional Standards)                  ║
+╚══════════════════════════════════════════════════════════════════════╝
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎯 MISSION: PIXEL-PERFECT RECONSTRUCTION (NO REDESIGN)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+┌─────────────────────────────────────────────────────────────────────┐
+│ ❌ NEVER DO THIS:                                                    │
+├─────────────────────────────────────────────────────────────────────┤
+│ ✗ Redesign or reinterpret the source image                          │
+│ ✗ Simplify complex layouts                                          │
+│ ✗ Change text content                                               │
+│ ✗ Guess colors (must extract exact HEX)                             │
+│ ✗ Use flexbox, grid, or absolute positioning                        │
+│ ✗ Use <div> for main layout structure                               │
+│ ✗ Use external <link> or <style> blocks with classes                │
+│ ✗ Assume missing content                                            │
+│ ✗ Skip visible elements                                             │
+│ ✗ Use background-image without fallback                             │
+└─────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────┐
+│ ✅ ALWAYS DO THIS:                                                   │
+├─────────────────────────────────────────────────────────────────────┤
+│ ✓ Treat design image as VISUAL BLUEPRINT                            │
+│ ✓ Use <table>, <tr>, <td> ONLY for layout                           │
+│ ✓ Inline ALL CSS (no external files)                                │
+│ ✓ Extract EXACT colors (6-digit HEX codes)                          │
+│ ✓ Measure EXACT spacing and padding                                 │
+│ ✓ Preserve EXACT text content                                       │
+│ ✓ Document limitations (confidenceGaps)                             │
+│ ✓ Fixed width: 600px                                                │
+│ ✓ Email-safe fonts (Arial, Helvetica, Georgia, Times)               │
+│ ✓ Include alt text for ALL images                                   │
+│ ✓ Add Outlook VML for rounded corners                               │
+│ ✓ Test in dark mode                                                 │
+└─────────────────────────────────────────────────────────────────────┘
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📐 STRUCTURE REQUIREMENTS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  Width:          600px (fixed, email standard)
+  Layout:         <table> based ONLY
+  CSS:            Inline styles exclusively
+  Fonts:          Arial, Helvetica, Georgia, Times, sans-serif
+  Responsive:     Media queries + .stack-column class
+  Outlook VML:    Required for rounded corners
+  Dark Mode:      color-scheme meta tag + solid backgrounds
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🌐 COMPATIBILITY TARGETS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ✅ Outlook Windows (all versions)      Must work
+  ✅ Outlook Mac                         Must work
+  ✅ Gmail (Web, Android, iOS)           Must work
+  ✅ Yahoo Mail                          Must work
+  ✅ Apple Mail                          Must work
+  ✅ Dark Mode (ON/OFF)                  Must work
+  ✅ Mobile Devices                      Must stack properly
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+♿ ACCESSIBILITY (WCAG AA MINIMUM)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  Font Size:      >= 14px for body text
+  Alt Text:       Required for ALL images
+  Contrast:       4.5:1 text, 3:1 large text
+  Structure:      Logical reading order
+  Headings:       Semantic hierarchy
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔧 ALLOWED CSS PROPERTIES (INLINE ONLY)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ✓ font-family        ✓ font-size          ✓ font-weight
+  ✓ color              ✓ background-color   ✓ text-align
+  ✓ padding            ✓ margin (limited)   ✓ border
+  ✓ width              ✓ height             ✓ line-height
+  ✓ letter-spacing     ✓ text-transform     ✓ text-decoration
+  ✓ vertical-align     ✓ border-radius*     ✓ box-shadow*
+
+  * = Requires Outlook VML fallback
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+❌ FORBIDDEN CSS (EMAIL CLIENTS DON'T SUPPORT)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ✗ display: flex             ✗ display: grid
+  ✗ position: absolute        ✗ position: fixed
+  ✗ float (unreliable)        ✗ transform
+  ✗ animation                 ✗ transition
+  ✗ ::before / ::after        ✗ CSS variables
+  ✗ External stylesheets      ✗ @import
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📊 VALIDATION REQUIREMENTS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  Match Confidence:   >= 98%
+  Quality Score:      >= 80%
+  Accessibility:      >= WCAG AA
+  Spam Risk:          Low or Medium
+  HTML Valid:         W3C compliant
+  Dark Mode Safe:     Yes
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎨 COLOR EXTRACTION RULES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  Format:         #RRGGBB (6-digit HEX, uppercase)
+  Examples:       #FFFFFF, #000000, #3B7DD6, #00D97E
+  No shortcuts:   ❌ #FFF  ✅ #FFFFFF
+  No RGB:         ❌ rgb(255,255,255)  ✅ #FFFFFF
+  Transparency:   Avoid (use solid colors for email safety)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📏 SPACING STANDARDS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  Padding Units:   px (avoid %, em, rem in email)
+  Format:          "20px" or "20px 40px" or "20px 40px 20px 40px"
+  Consistency:     Use exact values from design analysis
+  Spacing method:  Padding on <td>, not margin
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🖼️ IMAGE REQUIREMENTS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ✓ Include width and height attributes
+  ✓ Add meaningful alt text (not "image" or empty)
+  ✓ Use display: block to prevent spacing issues
+  ✓ Set border: 0 to remove default borders
+  ✓ Host on reliable CDN (not localhost)
+  ✓ Use absolute URLs (https://)
+  ✓ Test in dark mode
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔘 BUTTON (BULLETPROOF) STRUCTURE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+    <tr>
+      <td align="center" bgcolor="#000000" style="border-radius: 4px;">
+        <a href="#" style="padding: 12px 24px; display: inline-block;">
+          Button Text
+        </a>
+      </td>
+    </tr>
+  </table>
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🌓 DARK MODE PROTECTION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  Meta Tag:
+    <meta name="color-scheme" content="light dark"/>
+    <meta name="supported-color-schemes" content="light dark"/>
+
+  CSS:
+    @media (prefers-color-scheme: dark) {
+      .dark-mode-bg { background-color: #1a1a1a !important; }
+      .dark-mode-text { color: #fdfdfd !important; }
+    }
+
+  Gmail Dark Mode:
+    [data-ogsc] .dark-mode-bg { background-color: #1a1a1a !important; }
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔍 TESTING CHECKLIST
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  [ ] Visual match to source image
+  [ ] Outlook Windows rendering
+  [ ] Gmail rendering (web + mobile)
+  [ ] Apple Mail rendering
+  [ ] Dark mode (on/off in each client)
+  [ ] Mobile responsive stacking
+  [ ] All links work
+  [ ] Images load correctly
+  [ ] Alt text present
+  [ ] Color contrast >= 4.5:1
+  [ ] Spam score acceptable
+  [ ] HTML validates
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📝 SUCCESS CRITERIA
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ✅ Output visually identical to source image
+  ✅ No spacing/padding discrepancies
+  ✅ Exact color matches (HEX comparison)
+  ✅ All text content preserved
+  ✅ No layout shifts across clients
+  ✅ Dark mode doesn't break design
+  ✅ Passes accessibility audit
+  ✅ Ready for production deployment
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+💡 REMEMBER: Your goal is PERFECT REPRODUCTION, not creativity.
+           Pixel mismatch = FAILURE. Layout mismatch = FAILURE.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

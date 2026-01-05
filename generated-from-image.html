@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FIGURE - Email Design Tool</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background: #0a0c14;
+            color: #ffffff;
+            min-height: 100vh;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+        }
+
+        /* Left Panel */
+        .left-panel {
+            width: 360px;
+            background: #0d0f1a;
+            padding: 32px 24px;
+            overflow-y: auto;
+        }
+
+        .studio-label {
+            font-size: 10px;
+            font-weight: 600;
+            color: #6b7280;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 16px;
+        }
+
+        .image-preview {
+            border: 2px dashed #3b7dd6;
+            border-radius: 12px;
+            padding: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #0a0c14;
+            margin-bottom: 40px;
+        }
+
+        .image-preview img {
+            max-width: 100%;
+            height: auto;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .section-title {
+            font-size: 11px;
+            font-weight: 600;
+            color: #ffffff;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .expand-icon {
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .metrics {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .metric-card {
+            background: #1a1d2e;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .metric-label {
+            font-size: 9px;
+            font-weight: 600;
+            color: #6b7280;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .metric-value {
+            font-size: 36px;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .metric-value.green {
+            color: #00d97e;
+        }
+
+        .compliance-section {
+            margin-bottom: 24px;
+        }
+
+        .compliance-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px;
+            background: #1a1d2e;
+            border-radius: 8px;
+            margin-bottom: 12px;
+        }
+
+        .compliance-item-content {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .compliance-icon {
+            width: 20px;
+            height: 20px;
+            color: #3b7dd6;
+        }
+
+        .compliance-label {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .compliance-value {
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .compliance-value.red {
+            color: #ef4444;
+        }
+
+        .compliance-value.green {
+            color: #00d97e;
+        }
+
+        /* Right Panel */
+        .right-panel {
+            flex: 1;
+            background: #0a0c14;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 32px;
+            border-bottom: 1px solid #1a1d2e;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 8px;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            background: transparent;
+            border: none;
+            color: #6b7280;
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tab.active {
+            background: #3b7dd6;
+            color: #ffffff;
+        }
+
+        .export-btn {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            color: #ffffff;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .preview-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            padding: 20px;
+            border-bottom: 1px solid #1a1d2e;
+        }
+
+        .preview-btn {
+            background: transparent;
+            border: 1px solid #3b7dd6;
+            color: #6b7280;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .preview-btn.active {
+            background: #3b7dd6;
+            color: #ffffff;
+            border-color: #3b7dd6;
+        }
+
+        .status-indicator {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 11px;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: #00d97e;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+        }
+
+        .email-preview {
+            background: #1a1d2e;
+            border-radius: 12px;
+            padding: 40px;
+            max-width: 920px;
+            width: 100%;
+        }
+
+        .email-header {
+            text-align: center;
+            padding: 24px 0;
+            border-bottom: 1px solid #2a2d3e;
+            margin-bottom: 32px;
+        }
+
+        .email-logo {
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: #ffffff;
+        }
+
+        .email-label {
+            font-size: 11px;
+            color: #6b7280;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 16px;
+        }
+
+        .email-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 24px;
+        }
+
+        .email-metrics {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+
+        .email-metric {
+            flex: 1;
+        }
+
+        .email-metric-label {
+            font-size: 10px;
+            color: #6b7280;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .email-metric-bar {
+            height: 40px;
+            background: #0d0f1a;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .email-metric-bar.confidence {
+            background: linear-gradient(90deg, #3b7dd6 0%, #3b7dd6 100%);
+        }
+
+        .email-metric-bar.nodes {
+            color: #ffffff;
+        }
+
+        .monitor-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #2a2d3e;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+            color: #ffffff;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 32px;
+        }
+
+        .cta-section {
+            text-align: center;
+            padding: 60px 0;
+        }
+
+        .upload-icon {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 32px;
+            background: #0d0f1a;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .upload-arrow {
+            font-size: 48px;
+            color: #3b7dd6;
+        }
+
+        .main-heading {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: #ffffff;
+        }
+
+        .main-description {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #8b8b98;
+            max-width: 500px;
+            margin: 0 auto 32px;
+        }
+
+        .email-footer {
+            display: flex;
+            justify-content: space-between;
+            padding-top: 24px;
+            border-top: 1px solid #2a2d3e;
+            font-size: 11px;
+            color: #6b7280;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Left Panel -->
+        <div class="left-panel">
+            <div class="studio-label">01. STUDIO INPUT</div>
+
+            <div class="image-preview">
+                <img src="data:image/svg+xml,%3Csvg width='200' height='140' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='200' height='140' fill='%23fff'/%3E%3Ctext x='50%25' y='40%25' text-anchor='middle' font-family='Arial' font-size='14' fill='%23000'%3ECONVERSATION%3C/text%3E%3Crect x='20' y='70' width='160' height='4' fill='%23ddd'/%3E%3Crect x='20' y='80' width='160' height='4' fill='%23ddd'/%3E%3Crect x='20' y='90' width='100' height='4' fill='%23ddd'/%3E%3Crect x='20' y='110' width='160' height='16' rx='4' fill='%2300d97e'/%3E%3C/svg%3E"
+                    alt="Studio Design Input">
+            </div>
+
+            <div class="section-title">
+                VISION OUTPUT
+                <span class="expand-icon">++</span>
+            </div>
+
+            <div class="metrics">
+                <div class="metric-card">
+                    <div class="metric-label">CONFIDENCE</div>
+                    <div class="metric-value green">100%</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">DOM NODES</div>
+                    <div class="metric-value">15</div>
+                </div>
+            </div>
+
+            <div class="studio-label">02. COMPLIANCE HUB</div>
+
+            <div class="compliance-section">
+                <div class="compliance-item">
+                    <div class="compliance-item-content">
+                        <svg class="compliance-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z">
+                            </path>
+                        </svg>
+                        <span class="compliance-label">Accessibility</span>
+                    </div>
+                    <div class="compliance-value red">0%</div>
+                </div>
+
+                <div class="compliance-item">
+                    <div class="compliance-item-content">
+                        <svg class="compliance-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z">
+                            </path>
+                        </svg>
+                        <span class="compliance-label">Anti-Spam</span>
+                    </div>
+                    <div class="compliance-value green">100%</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Panel -->
+        <div class="right-panel">
+            <div class="top-bar">
+                <div class="tabs">
+                    <button class="tab">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <rect x="2" y="3" width="20" height="14" rx="2" stroke-width="2"></rect>
+                            <line x1="8" y1="21" x2="16" y2="21" stroke-width="2"></line>
+                            <line x1="12" y1="17" x2="12" y2="21" stroke-width="2"></line>
+                        </svg>
+                        MONITOR
+                    </button>
+                    <button class="tab">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <polyline points="16 18 22 12 16 6" stroke-width="2"></polyline>
+                            <polyline points="8 6 2 12 8 18" stroke-width="2"></polyline>
+                        </svg>
+                        CODE
+                    </button>
+                    <button class="tab active">
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="2"></circle>
+                        </svg>
+                        LIVE
+                    </button>
+                    <button class="tab">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                                stroke-width="2"></path>
+                        </svg>
+                        AUDITS
+                    </button>
+                    <button class="tab">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <rect x="3" y="3" width="7" height="7" stroke-width="2"></rect>
+                            <rect x="14" y="3" width="7" height="7" stroke-width="2"></rect>
+                            <rect x="14" y="14" width="7" height="7" stroke-width="2"></rect>
+                            <rect x="3" y="14" width="7" height="7" stroke-width="2"></rect>
+                        </svg>
+                    </button>
+                </div>
+
+                <button class="export-btn">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                    </svg>
+                    EXPORT HTML
+                </button>
+            </div>
+
+            <div class="preview-controls">
+                <button class="preview-btn active">
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                        <rect x="2" y="3" width="20" height="14" rx="2"></rect>
+                    </svg>
+                    DESKTOP
+                </button>
+                <button class="preview-btn">
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                        <rect x="7" y="2" width="10" height="20" rx="2"></rect>
+                    </svg>
+                    MOBILE
+                </button>
+                <button class="preview-btn">
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="5"></circle>
+                    </svg>
+                    DARK MODE
+                </button>
+
+                <div class="status-indicator">
+                    <span class="status-dot"></span>
+                    LIVE RENDERING ACTIVE
+                </div>
+            </div>
+
+            <div class="main-content">
+                <div class="email-preview">
+                    <div class="email-header">
+                        <div class="email-logo">FIGURE</div>
+                    </div>
+
+                    <div class="email-label">01. STUDIO INPUT</div>
+
+                    <div class="email-title">Studio Design Input</div>
+
+                    <div class="email-label">VISION OUTPUT</div>
+
+                    <div class="email-metrics">
+                        <div class="email-metric">
+                            <div class="email-metric-label">CONFIDENCE</div>
+                            <div class="email-metric-bar confidence"></div>
+                        </div>
+                        <div class="email-metric">
+                            <div class="email-metric-label">DOM NODES</div>
+                            <div class="email-metric-bar nodes">7</div>
+                        </div>
+                    </div>
+
+                    <div class="monitor-badge">
+                        <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24">
+                            <rect x="2" y="3" width="20" height="14" rx="2"></rect>
+                        </svg>
+                        MONITOR
+                    </div>
+
+                    <div class="cta-section">
+                        <div class="upload-icon">
+                            <div class="upload-arrow">↑</div>
+                        </div>
+
+                        <h1 class="main-heading">Vision Pipeline Standby</h1>
+
+                        <p class="main-description">
+                            Submit a design snapshot to trigger the high-fidelity recovery engine. We support complex
+                            multi-column grids and dark mode variants.
+                        </p>
+                    </div>
+
+                    <div class="email-footer">
+                        <div>ENGINE: GENESIS-V1</div>
+                        <div>MODE: PROFESSIONAL</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
