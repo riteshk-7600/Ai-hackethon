@@ -1,5 +1,25 @@
 [
   {
+    "id": 1768303227356,
+    "date": "2026-01-13T11:20:27.356Z",
+    "url": "https://example.com vs https://example.com",
+    "type": "Advanced Comparison",
+    "score": 100,
+    "status": "pass",
+    "issuesFound": 0,
+    "criticalIssues": 0
+  },
+  {
+    "id": 1768303227226,
+    "date": "2026-01-13T11:20:27.226Z",
+    "url": "https://example.com",
+    "type": "Website Audit",
+    "score": 100,
+    "status": "pass",
+    "issuesFound": 0,
+    "criticalIssues": 0
+  },
+  {
     "id": 1768303100644,
     "date": "2026-01-13T11:18:20.644Z",
     "url": "https://example.com",
