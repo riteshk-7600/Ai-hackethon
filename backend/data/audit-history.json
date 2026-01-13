@@ -1,5 +1,15 @@
 [
   {
+    "id": 1768303467622,
+    "date": "2026-01-13T11:24:27.622Z",
+    "url": "Email Template",
+    "type": "Newsletter",
+    "score": 100,
+    "status": "pass",
+    "issuesFound": 0,
+    "criticalIssues": 0
+  },
+  {
     "id": 1768303227356,
     "date": "2026-01-13T11:20:27.356Z",
     "url": "https://example.com vs https://example.com",
