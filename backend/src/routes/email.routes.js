@@ -5,6 +5,7 @@
 import express from 'express';
 import multer from 'multer';
 import emailController from '../controllers/email.controller.js';
+import emailEnhancedController from '../controllers/email-enhanced.controller.js';
 import { authenticate } from '../middleware/auth.middleware.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -53,6 +54,9 @@ router.post('/analyze', upload.single('image'), emailController.analyzeDesign);
 
 // Generate email from analysis
 router.post('/generate', emailController.generateEmail);
+
+// Generate email with enhanced features (visual editor, image slots)
+router.post('/generate-enhanced', emailEnhancedController.generateEnhanced);
 
 // Generate basic template (no design upload)
 router.post('/generate-basic', emailController.generateBasicTemplate);
