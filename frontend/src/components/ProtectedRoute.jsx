@@ -13,10 +13,9 @@ const ProtectedRoute = ({ children }) => {
         )
     }
 
-    // TEMPORARILY DISABLED FOR TESTING - REMOVE IN PRODUCTION
-    // if (!user) {
-    //     return <Navigate to="/login" state={{ from: location }} replace />
-    // }
+    if (!user) {
+        return <Navigate to="/login" state={{ from: location }} replace />
+    }
 
     return children
 }
