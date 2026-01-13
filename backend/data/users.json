@@ -3,11 +3,18 @@
     "id": "1766755530976",
     "name": "Admin User",
     "email": "admin@example.com",
-    "password": "$2b$10$qjpvBeZqF3vkxGLXT0F6au8zZCY.VgqUbBQtDQ3Aiu0MWojCn7BkC",
+    "password": "$2b$10$2TC4hOp8u8qsnBHfnyTHleH6DpcAu5Gf8xSUD/KkL2mIjiSGnYn76",
     "role": "user",
     "verified": false,
     "createdAt": "2025-12-26T13:25:30.976Z",
     "sessions": [
+      {
+        "id": "1768300115456",
+        "ip": "::ffff:127.0.0.1",
+        "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+        "device": "Web Browser",
+        "lastActive": "2026-01-13T10:28:35.456Z"
+      },
       {
         "id": "1766755586705",
         "ip": "::1",
