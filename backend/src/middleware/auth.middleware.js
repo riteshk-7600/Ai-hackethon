@@ -6,19 +6,18 @@ export const authenticate = async (req, res, next) => {
     try {
         const authHeader = req.headers.authorization
         if (!authHeader || !authHeader.startsWith('Bearer ')) {
-            // TEMPORARY BYPASS FOR TESTING - REMOVE IN PRODUCTION
-            logger.warn('Authentication bypassed - using mock user')
-            req.user = {
-                id: '1766755530976',
-                name: 'Guest User',
-                email: 'guest@example.com',
-                role: 'user'
-            }
-            return next()
+            return res.status(401).json({ error: 'Authentication required. Please login.' })
         }
 
         const token = authHeader.split(' ')[1]
-        const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback-secret-key-123')
+        const jwtSecret = process.env.JWT_SECRET
+
+        if (!jwtSecret) {
+            logger.error('CRITICAL: JWT_SECRET environment variable is not defined!')
+            return res.status(500).json({ error: 'Server configuration error' })
+        }
+
+        const decoded = jwt.verify(token, jwtSecret)
 
         const user = await userService.findById(decoded.id)
         if (!user) {
