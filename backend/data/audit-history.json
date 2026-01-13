@@ -1,5 +1,15 @@
 [
   {
+    "id": 1768307044703,
+    "date": "2026-01-13T12:24:04.703Z",
+    "url": "Batch Image Session",
+    "type": "Image Optimization",
+    "score": 95.51,
+    "status": "pass",
+    "issuesFound": 1,
+    "criticalIssues": 0
+  },
+  {
     "id": 1768307018934,
     "date": "2026-01-13T12:23:38.934Z",
     "url": "Batch Image Session",
