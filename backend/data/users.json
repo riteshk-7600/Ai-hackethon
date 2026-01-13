@@ -9,6 +9,13 @@
     "createdAt": "2025-12-26T13:25:30.976Z",
     "sessions": [
       {
+        "id": "1768302872933",
+        "ip": "::ffff:127.0.0.1",
+        "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+        "device": "Web Browser",
+        "lastActive": "2026-01-13T11:14:32.933Z"
+      },
+      {
         "id": "1768300115456",
         "ip": "::ffff:127.0.0.1",
         "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
