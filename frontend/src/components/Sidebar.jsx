@@ -17,6 +17,7 @@ import { useAuth } from '../context/AuthContext'
 const navItems = [
     { path: '/', icon: LayoutDashboard, label: 'Dashboard' },
     { path: '/website-auditor', icon: Layout, label: 'Website Auditor' },
+    { path: '/accessibility', icon: Layout, label: 'Check Accessibility' },
     { path: '/comparator', icon: GitCompare, label: 'Live vs Stage' },
     { path: '/image-optimizer', icon: Image, label: 'Image Optimizer' },
     { path: '/pagespeed', icon: Gauge, label: 'PageSpeed' },

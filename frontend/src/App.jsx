@@ -10,6 +10,7 @@ import PageSpeedAnalyzer from './pages/PageSpeedAnalyzer'
 import AutoDocs from './pages/AutoDocs'
 import NewsletterTester from './pages/NewsletterTester'
 import EmailTemplateGenerator from './pages/EmailTemplateGeneratorEnhanced'
+import AccessibilityChecker from './pages/AccessibilityChecker'
 import Settings from './pages/Settings'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
@@ -58,6 +59,7 @@ function AppContent() {
                                                 <Route path="/auto-docs" element={<AutoDocs />} />
                                                 <Route path="/newsletter" element={<NewsletterTester />} />
                                                 <Route path="/email-generator" element={<EmailTemplateGenerator />} />
+                                                <Route path="/accessibility" element={<AccessibilityChecker />} />
                                                 <Route path="/settings" element={<Settings />} />
                                             </Routes>
                                         </div>
