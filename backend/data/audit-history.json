@@ -1,5 +1,15 @@
 [
   {
+    "id": 1768302965598,
+    "date": "2026-01-13T11:16:05.598Z",
+    "url": "https://example.com",
+    "type": "Website Audit",
+    "score": 7,
+    "status": "fail",
+    "issuesFound": 7,
+    "criticalIssues": 6
+  },
+  {
     "id": 1768300140765,
     "date": "2026-01-13T10:29:00.765Z",
     "url": "Source Code Documentation",
