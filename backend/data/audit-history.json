@@ -1,5 +1,25 @@
 [
   {
+    "id": 1768303031315,
+    "date": "2026-01-13T11:17:11.315Z",
+    "url": "https://example.com",
+    "type": "Accessibility",
+    "score": 51,
+    "status": "fail",
+    "issuesFound": 8,
+    "criticalIssues": 5
+  },
+  {
+    "id": 1768303031229,
+    "date": "2026-01-13T11:17:11.229Z",
+    "url": "https://example.com",
+    "type": "Accessibility",
+    "score": 51,
+    "status": "error",
+    "issuesFound": 8,
+    "criticalIssues": 5
+  },
+  {
     "id": 1768302965598,
     "date": "2026-01-13T11:16:05.598Z",
     "url": "https://example.com",
