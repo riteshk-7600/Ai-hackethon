@@ -3,7 +3,7 @@
     "id": "1766755530976",
     "name": "Admin User",
     "email": "admin@example.com",
-    "password": "$2b$10$2TC4hOp8u8qsnBHfnyTHleH6DpcAu5Gf8xSUD/KkL2mIjiSGnYn76",
+    "password": "$2b$10$RdKv9hmivw1OVW6J20hO3OEK98ZXhww6JOZYlEuKwWKjDs0FNzg4i",
     "role": "user",
     "verified": false,
     "createdAt": "2025-12-26T13:25:30.976Z",
