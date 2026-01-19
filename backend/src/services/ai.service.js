@@ -71,8 +71,8 @@ export class AIService {
                 }
 
                 if (this.genAI) {
-                    logger.info(`Using Gemini Pro Vision for analysis (MIME: ${mimeType})`);
-                    const model = this.genAI.getGenerativeModel({ model: "gemini-pro-vision" });
+                    logger.info(`Using Gemini 2.0 Flash for vision analysis`);
+                    const model = this.genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
                     try {
                         const result = await model.generateContent([
                             prompt,
