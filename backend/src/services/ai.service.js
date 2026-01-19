@@ -119,24 +119,18 @@ export class AIService {
         }
     }
 
-            return 'AI provider not configured for vision'
-        } catch (error) {
-    logger.error('Vision AI analysis error:', error)
-    throw new Error(`Vision analysis failed: ${error.message}`)
-}
-    }
 
     // ... rest of the original methods with fallback logic ...
     async explainIssue(issue, context = {}) {
-    if (!this.enabled) return `${issue.description}. ${issue.recommendation || issue.fix || 'Please review and fix this issue.'}`
-    // Implementation for OpenAI/Gemini/Anthropic... (keeping it similar for brevity)
-    return "AI Explanation here..."
-}
+        if (!this.enabled) return `${issue.description}. ${issue.recommendation || issue.fix || 'Please review and fix this issue.'}`
+        // Implementation for OpenAI/Gemini/Anthropic... (keeping it similar for brevity)
+        return "AI Explanation here..."
+    }
 
     async generateFix(issue) {
-    if (!this.enabled) return issue.fix || 'Fix not available'
-    return "AI Code Fix here..."
-}
+        if (!this.enabled) return issue.fix || 'Fix not available'
+        return "AI Code Fix here..."
+    }
 }
 
 export default new AIService()

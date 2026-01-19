@@ -34,14 +34,14 @@ const upload = multer({
         fileSize: 50 * 1024 * 1024 // 50MB limit
     },
     fileFilter: (req, file, cb) => {
-        const allowedTypes = /jpeg|jpg|png/;
+        const allowedTypes = /jpeg|jpg|png|pdf/;
         const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
         const mimetype = allowedTypes.test(file.mimetype);
 
         if (mimetype && extname) {
             return cb(null, true);
         } else {
-            cb(new Error('Only PNG and JPG images are allowed'));
+            cb(new Error('Only PNG, JPG images and PDF files are allowed'));
         }
     }
 });
