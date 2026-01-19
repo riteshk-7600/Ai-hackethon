@@ -7,24 +7,30 @@ import aiService from './ai.service.js';
 import { logger } from '../utils/logger.js';
 import fs from 'fs/promises';
 
+import path from 'path';
 import sharp from 'sharp';
 
 class EmailVisionService {
     async analyzeDesign(imagePath) {
         try {
-            let imageBuffer = await fs.readFile(imagePath);
+            const ext = path.extname(imagePath).toLowerCase();
+            const mimeType = ext === '.pdf' ? 'application/pdf' : (ext === '.png' ? 'image/png' : 'image/jpeg');
 
-            // Optimization: Resize to prevent timeout/payload issues
-            try {
-                imageBuffer = await sharp(imageBuffer)
-                    .resize(800, null, { withoutEnlargement: true })
-                    .jpeg({ quality: 80 })
-                    .toBuffer();
-            } catch (optError) {
-                logger.warn('Image optimization failed, proceeding with original', { error: optError.message });
+            let dataBuffer = await fs.readFile(imagePath);
+
+            // Optimization: Resize images (skip for PDFs)
+            if (mimeType.startsWith('image/')) {
+                try {
+                    dataBuffer = await sharp(dataBuffer)
+                        .resize(1000, null, { withoutEnlargement: true })
+                        .jpeg({ quality: 80 })
+                        .toBuffer();
+                } catch (optError) {
+                    logger.warn('Image optimization failed, proceeding with original', { error: optError.message });
+                }
             }
 
-            const base64Image = imageBuffer.toString('base64');
+            const base64Data = dataBuffer.toString('base64');
 
             const geminiKey = process.env.GEMINI_API_KEY;
             const openaiKey = process.env.OPENAI_API_KEY;
@@ -41,10 +47,10 @@ class EmailVisionService {
 
             // 45-second timeout race (increased for complex design analysis)
             const timeoutPromise = new Promise((_, reject) => {
-                setTimeout(() => reject(new Error('AI Analysis Timed Out')), 45000);
+                setTimeout(() => reject(new Error('Analysis Timed Out')), 45000);
             });
 
-            const visionPromise = aiService.analyzeImageWithVision(base64Image, this.getVisionPrompt());
+            const visionPromise = aiService.analyzeImageWithVision(base64Data, this.getVisionPrompt(), mimeType);
 
             let response;
             try {
