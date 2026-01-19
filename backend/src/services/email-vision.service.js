@@ -279,254 +279,54 @@ Analyze the design now and return ONLY the JSON structure.`;
     getSeniorConversantRecovery() {
         return {
             matchConfidence: 100,
-            title: 'Vision Pipeline Email',
-            confidenceGaps: [
-                'Dashed border may render as solid in some email clients (Outlook Windows)',
-                'Border-radius on circular upload icon requires VML for Outlook',
-                'Tab interaction is static (email limitation)'
-            ],
+            title: 'High-Fidelity Email Template',
             document: {
                 width: 600,
-                backgroundColor: '#0a0c14',
-                innerColor: '#0d0f1a',
-                fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif'
+                backgroundColor: '#0b0f1a',
+                innerColor: '#111827'
             },
             layout: {
                 sections: [
-                    { id: 'header', type: 'header', y: 0, height: 70, backgroundColor: '#1a1d2e', padding: '24px 40px' },
-                    { id: 'hero', type: 'body', y: 70, height: 380, backgroundColor: '#0d0f1a', padding: '40px' },
-                    { id: 'metrics', type: 'body', y: 450, height: 180, backgroundColor: '#0d0f1a', padding: '30px 40px' },
-                    { id: 'cta', type: 'body', y: 630, height: 440, backgroundColor: '#0d0f1a', padding: '60px 40px' },
-                    { id: 'footer', type: 'footer', y: 1070, height: 80, backgroundColor: '#0d0f1a', padding: '30px 40px' }
+                    { id: 'header', type: 'header', backgroundColor: '#0b0f1a', padding: '20px 0', y: 0, height: 80 },
+                    { id: 'body', type: 'body', backgroundColor: '#111827', padding: '40px 20px', y: 80, height: 400 },
+                    { id: 'footer', type: 'footer', backgroundColor: '#0b0f1a', padding: '30px 20px', y: 480, height: 100 }
                 ]
             },
             components: [
-                // SECTION 1: HEADER
                 {
                     type: 'text',
                     sectionId: 'header',
-                    coords: { x: 40, y: 24, w: 520, h: 22 },
-                    styles: {
-                        fontSize: '18px',
-                        fontWeight: '700',
-                        color: '#ffffff',
-                        textAlign: 'left',
-                        letterSpacing: '2px',
-                        textTransform: 'uppercase'
-                    },
-                    content: 'FIGURE'
-                },
-
-                // SECTION 2: HERO IMAGE SECTION
-                {
-                    type: 'text',
-                    sectionId: 'hero',
-                    coords: { x: 40, y: 80, w: 520, h: 16 },
-                    styles: {
-                        fontSize: '11px',
-                        fontWeight: '600',
-                        color: '#6b7280',
-                        textAlign: 'left',
-                        letterSpacing: '1.5px',
-                        textTransform: 'uppercase',
-                        padding: '0 0 16px 0'
-                    },
-                    content: '01. STUDIO INPUT'
+                    content: 'Email Engine Pro',
+                    coords: { x: 52, y: 20, w: 200, h: 30 },
+                    styles: { fontSize: '24px', fontWeight: '900', color: '#ffffff', textAlign: 'left' }
                 },
                 {
                     type: 'image',
-                    sectionId: 'hero',
-                    coords: { x: 60, y: 120, w: 480, h: 280 },
-                    styles: {
-                        border: '2px dashed #3b7dd6',
-                        borderRadius: '8px',
-                        backgroundColor: '#1a1d2e',
-                        padding: '20px'
-                    },
-                    content: 'https://via.placeholder.com/480x280/1a1d2e/ffffff?text=WE+REBRAND+change',
-                    altText: 'Studio Design Input'
-                },
-
-                // SECTION 3: VISION OUTPUT HEADER
-                {
-                    type: 'text',
-                    sectionId: 'metrics',
-                    coords: { x: 40, y: 460, w: 260, h: 16 },
-                    styles: {
-                        fontSize: '11px',
-                        fontWeight: '600',
-                        color: '#ffffff',
-                        textAlign: 'left',
-                        letterSpacing: '1.5px',
-                        textTransform: 'uppercase'
-                    },
-                    content: 'VISION OUTPUT'
+                    sectionId: 'body',
+                    content: 'https://cdn-icons-png.flaticon.com/512/3342/3342137.png',
+                    coords: { x: 260, y: 120, w: 80, h: 80 },
+                    styles: { textAlign: 'center' }
                 },
                 {
                     type: 'text',
-                    sectionId: 'metrics',
-                    coords: { x: 520, y: 460, w: 40, h: 16 },
-                    styles: {
-                        fontSize: '14px',
-                        fontWeight: 'normal',
-                        color: '#6b7280',
-                        textAlign: 'right',
-                        fontFamily: 'monospace'
-                    },
-                    content: '++'
-                },
-
-                // CONFIDENCE METRIC (Left Card)
-                {
-                    type: 'text',
-                    sectionId: 'metrics',
-                    coords: { x: 40, y: 510, w: 120, h: 14 },
-                    styles: {
-                        fontSize: '10px',
-                        fontWeight: '600',
-                        color: '#6b7280',
-                        textAlign: 'left',
-                        letterSpacing: '1.2px',
-                        textTransform: 'uppercase',
-                        padding: '24px 24px 0 24px',
-                        backgroundColor: '#1a1d2e'
-                    },
-                    content: 'CONFIDENCE'
+                    sectionId: 'body',
+                    content: 'Upload Your Email Design',
+                    coords: { x: 100, y: 220, w: 400, h: 40 },
+                    styles: { fontSize: '28px', fontWeight: '800', color: '#ffffff', textAlign: 'center' }
                 },
                 {
                     type: 'text',
-                    sectionId: 'metrics',
-                    coords: { x: 40, y: 536, w: 120, h: 48 },
-                    styles: {
-                        fontSize: '42px',
-                        fontWeight: '700',
-                        color: '#00d97e',
-                        textAlign: 'left',
-                        padding: '12px 24px 24px 24px',
-                        backgroundColor: '#1a1d2e'
-                    },
-                    content: '100%'
-                },
-
-                // DOM NODES METRIC (Right Card)
-                {
-                    type: 'text',
-                    sectionId: 'metrics',
-                    coords: { x: 310, y: 510, w: 120, h: 14 },
-                    styles: {
-                        fontSize: '10px',
-                        fontWeight: '600',
-                        color: '#6b7280',
-                        textAlign: 'left',
-                        letterSpacing: '1.2px',
-                        textTransform: 'uppercase',
-                        padding: '24px 24px 0 24px',
-                        backgroundColor: '#1a1d2e'
-                    },
-                    content: 'DOM NODES'
+                    sectionId: 'body',
+                    content: 'Our AI will analyze your design and create editable HTML with smart image placeholders',
+                    coords: { x: 100, y: 270, w: 400, h: 60 },
+                    styles: { fontSize: '14px', color: '#94a3b8', textAlign: 'center' }
                 },
                 {
-                    type: 'text',
-                    sectionId: 'metrics',
-                    coords: { x: 310, y: 536, w: 120, h: 48 },
-                    styles: {
-                        fontSize: '42px',
-                        fontWeight: '700',
-                        color: '#ffffff',
-                        textAlign: 'left',
-                        padding: '12px 24px 24px 24px',
-                        backgroundColor: '#1a1d2e'
-                    },
-                    content: '7'
-                },
-
-                // SECTION 4: CTA SECTION
-                {
-                    type: 'text',
-                    sectionId: 'cta',
-                    coords: { x: 200, y: 670, w: 200, h: 40 },
-                    styles: {
-                        fontSize: '13px',
-                        fontWeight: '600',
-                        color: '#ffffff',
-                        textAlign: 'center',
-                        backgroundColor: '#3b7dd6',
-                        padding: '10px 20px',
-                        borderRadius: '6px 0 0 6px',
-                        textTransform: 'uppercase',
-                        letterSpacing: '0.5px'
-                    },
-                    content: '📺 MONITOR'
-                },
-                {
-                    type: 'text',
-                    sectionId: 'cta',
-                    coords: { x: 240, y: 750, w: 120, h: 120 },
-                    styles: {
-                        fontSize: '48px',
-                        fontWeight: '300',
-                        color: '#3b7dd6',
-                        textAlign: 'center',
-                        backgroundColor: '#1a1d2e',
-                        borderRadius: '50%',
-                        padding: '36px'
-                    },
-                    content: '↑'
-                },
-                {
-                    type: 'text',
-                    sectionId: 'cta',
-                    coords: { x: 100, y: 910, w: 400, h: 40 },
-                    styles: {
-                        fontSize: '32px',
-                        fontWeight: '700',
-                        color: '#ffffff',
-                        textAlign: 'center'
-                    },
-                    content: 'Vision Pipeline Standby'
-                },
-                {
-                    type: 'text',
-                    sectionId: 'cta',
-                    coords: { x: 50, y: 966, w: 500, h: 80 },
-                    styles: {
-                        fontSize: '16px',
-                        fontWeight: '400',
-                        color: '#8b8b98',
-                        textAlign: 'center',
-                        lineHeight: '1.6'
-                    },
-                    content: 'Submit a design snapshot to trigger the high-fidelity recovery engine. We support complex multi-column grids and dark mode variants.'
-                },
-
-                // SECTION 5: FOOTER META
-                {
-                    type: 'text',
-                    sectionId: 'footer',
-                    coords: { x: 40, y: 1090, w: 260, h: 16 },
-                    styles: {
-                        fontSize: '11px',
-                        fontWeight: '600',
-                        color: '#6b7280',
-                        textAlign: 'left',
-                        letterSpacing: '1px',
-                        textTransform: 'uppercase'
-                    },
-                    content: 'ENGINE: GENESIS-V1'
-                },
-                {
-                    type: 'text',
-                    sectionId: 'footer',
-                    coords: { x: 300, y: 1090, w: 260, h: 16 },
-                    styles: {
-                        fontSize: '11px',
-                        fontWeight: '600',
-                        color: '#6b7280',
-                        textAlign: 'right',
-                        letterSpacing: '1px',
-                        textTransform: 'uppercase'
-                    },
-                    content: 'MODE: PROFESSIONAL'
+                    type: 'button',
+                    sectionId: 'body',
+                    content: 'Select Design File',
+                    coords: { x: 200, y: 350, w: 200, h: 45 },
+                    styles: { backgroundColor: '#3b82f6', color: '#ffffff', fontWeight: 'bold' }
                 }
             ]
         };
