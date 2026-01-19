@@ -50,7 +50,7 @@ export class AIService {
         return this.enabled
     }
 
-    async analyzeImageWithVision(base64Image, prompt) {
+    async analyzeImageWithVision(base64Data, prompt, mimeType = "image/png") {
         if (!process.env.GEMINI_API_KEY && !process.env.OPENAI_API_KEY) {
             logger.warn('AI vision analysis requested but no API keys configured')
             return 'AI vision analysis not available - API key not configured'
@@ -59,7 +59,7 @@ export class AIService {
         try {
             // Prefer Gemini for High-Fidelity Vision if available
             if (process.env.GEMINI_API_KEY) {
-                // Lazy-initialize if needed (handles cases where .env was loaded after class instantiation)
+                // ... (lazy-init code)
                 if (!this.genAI) {
                     try {
                         this.genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY)
@@ -71,15 +71,15 @@ export class AIService {
                 }
 
                 if (this.genAI) {
-                    logger.info('Using Gemini Flash (Latest) for vision analysis');
-                    const model = this.genAI.getGenerativeModel({ model: "gemini-flash-latest" });
+                    logger.info(`Using Gemini Flash (Latest) for analysis of ${mimeType}`);
+                    const model = this.genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest" });
                     try {
                         const result = await model.generateContent([
                             prompt,
                             {
                                 inlineData: {
-                                    data: base64Image,
-                                    mimeType: "image/png"
+                                    data: base64Data,
+                                    mimeType: mimeType
                                 }
                             }
                         ]);
@@ -87,14 +87,13 @@ export class AIService {
                         return response.text();
                     } catch (geminiError) {
                         logger.warn('Gemini vision failed:', geminiError.message);
-                        // If no other keys, throw. If others exist, swallow and let flow continue to OpenAI/Anthropic
                         if (!process.env.OPENAI_API_KEY && !process.env.ANTHROPIC_API_KEY) throw geminiError;
                     }
                 }
             }
 
-            // Fallback: OpenAI
-            if (process.env.OPENAI_API_KEY && this.openai) {
+            // Fallback: OpenAI (Only supports images)
+            if (process.env.OPENAI_API_KEY && this.openai && mimeType.startsWith('image/')) {
                 const response = await this.openai.chat.completions.create({
                     model: 'gpt-4o',
                     messages: [{
@@ -103,7 +102,7 @@ export class AIService {
                             { type: 'text', text: prompt },
                             {
                                 type: 'image_url',
-                                image_url: { url: `data:image/png;base64,${base64Image}` }
+                                image_url: { url: `data:${mimeType};base64,${base64Data}` }
                             }
                         ]
                     }],
@@ -113,24 +112,31 @@ export class AIService {
                 return response.choices[0].message.content
             }
 
-            return 'AI provider not configured for vision'
+            return 'AI provider not configured for this file type'
         } catch (error) {
             logger.error('Vision AI analysis error:', error)
-            throw new Error(`Vision analysis failed: ${error.message}`)
+            throw new Error(`Analysis failed: ${error.message}`)
         }
+    }
+
+            return 'AI provider not configured for vision'
+        } catch (error) {
+    logger.error('Vision AI analysis error:', error)
+    throw new Error(`Vision analysis failed: ${error.message}`)
+}
     }
 
     // ... rest of the original methods with fallback logic ...
     async explainIssue(issue, context = {}) {
-        if (!this.enabled) return `${issue.description}. ${issue.recommendation || issue.fix || 'Please review and fix this issue.'}`
-        // Implementation for OpenAI/Gemini/Anthropic... (keeping it similar for brevity)
-        return "AI Explanation here..."
-    }
+    if (!this.enabled) return `${issue.description}. ${issue.recommendation || issue.fix || 'Please review and fix this issue.'}`
+    // Implementation for OpenAI/Gemini/Anthropic... (keeping it similar for brevity)
+    return "AI Explanation here..."
+}
 
     async generateFix(issue) {
-        if (!this.enabled) return issue.fix || 'Fix not available'
-        return "AI Code Fix here..."
-    }
+    if (!this.enabled) return issue.fix || 'Fix not available'
+    return "AI Code Fix here..."
+}
 }
 
 export default new AIService()
