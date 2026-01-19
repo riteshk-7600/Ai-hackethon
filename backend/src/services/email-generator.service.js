@@ -31,8 +31,14 @@ class EmailGeneratorService {
                 matchConfidence = 0,
                 document = { width: 600, backgroundColor: '#f4f4f4', innerColor: '#ffffff' },
                 layout: rawLayout = { sections: [] },
-                components = []
+                components = [],
+                rawHtmlOverride = null
             } = analysis;
+
+            if (rawHtmlOverride) {
+                logger.info('Using raw HTML override from AI');
+                return rawHtmlOverride;
+            }
 
             const layout = rawLayout || { sections: [] };
 
