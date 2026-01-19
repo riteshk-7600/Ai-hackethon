@@ -73,21 +73,48 @@ export class AIService {
                 if (this.genAI) {
                     logger.info(`Using Gemini 2.0 Flash for vision analysis`);
                     const model = this.genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
-                    try {
-                        const result = await model.generateContent([
-                            prompt,
-                            {
-                                inlineData: {
-                                    data: base64Data,
-                                    mimeType: mimeType
+
+                    // Retry logic with exponential backoff for rate limiting
+                    const maxRetries = 3;
+                    let lastError = null;
+
+                    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+                        try {
+                            const result = await model.generateContent([
+                                prompt,
+                                {
+                                    inlineData: {
+                                        data: base64Data,
+                                        mimeType: mimeType
+                                    }
+                                }
+                            ]);
+                            const response = await result.response;
+                            return response.text();
+                        } catch (geminiError) {
+                            lastError = geminiError;
+                            const errorMsg = geminiError.message || '';
+
+                            // Check for rate limiting (429)
+                            if (errorMsg.includes('429') || errorMsg.includes('quota') || errorMsg.includes('rate')) {
+                                if (attempt < maxRetries) {
+                                    const waitTime = Math.pow(2, attempt) * 1000; // 2s, 4s, 8s
+                                    logger.warn(`Rate limited, waiting ${waitTime / 1000}s before retry ${attempt + 1}/${maxRetries}`);
+                                    await new Promise(resolve => setTimeout(resolve, waitTime));
+                                    continue;
+                                } else {
+                                    // All retries exhausted due to rate limiting
+                                    throw new Error('Gemini API free tier quota exceeded. Please wait a few minutes and try again, or upgrade to a paid API key at https://ai.google.dev/pricing');
                                 }
                             }
-                        ]);
-                        const response = await result.response;
-                        return response.text();
-                    } catch (geminiError) {
-                        logger.warn('Gemini vision failed:', geminiError.message);
-                        if (!process.env.OPENAI_API_KEY && !process.env.ANTHROPIC_API_KEY) throw geminiError;
+
+                            logger.warn('Gemini vision failed:', geminiError.message);
+                            break; // Don't retry for non-rate-limit errors
+                        }
+                    }
+
+                    if (lastError && !process.env.OPENAI_API_KEY && !process.env.ANTHROPIC_API_KEY) {
+                        throw lastError;
                     }
                 }
             }
