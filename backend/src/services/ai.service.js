@@ -33,7 +33,7 @@ export class AIService {
         // 3. Gemini Initialization (Preferred for High-Fidelity Vision)
         if (process.env.GEMINI_API_KEY) {
             try {
-                this.genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY)
+                this.genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY, { apiVersion: 'v1' })
                 if (this.provider === 'gemini') this.enabled = true
                 logger.info('Google Gemini service initialized')
             } catch (err) {
