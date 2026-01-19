@@ -62,7 +62,7 @@ export class AIService {
                 // ... (lazy-init code)
                 if (!this.genAI) {
                     try {
-                        this.genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY)
+                        this.genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY, { apiVersion: 'v1' })
                         this.enabled = true
                         logger.info('Google Gemini service lazily initialized')
                     } catch (err) {
@@ -71,7 +71,7 @@ export class AIService {
                 }
 
                 if (this.genAI) {
-                    logger.info(`Using Gemini Flash (Latest) for analysis of ${mimeType}`);
+                    logger.info(`Using Gemini Flash for analysis (MIME: ${mimeType})`);
                     const model = this.genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
                     try {
                         const result = await model.generateContent([
