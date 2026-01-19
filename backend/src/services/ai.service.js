@@ -72,7 +72,7 @@ export class AIService {
 
                 if (this.genAI) {
                     logger.info(`Using Gemini Flash (Latest) for analysis of ${mimeType}`);
-                    const model = this.genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest" });
+                    const model = this.genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
                     try {
                         const result = await model.generateContent([
                             prompt,
